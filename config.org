@@ -1,6 +1,14 @@
+#+TITLE: XYU的Doom Emacs 配置
+
+* 个人信息
+** 用于加密等
+#+begin_src emacs-lisp
 (setq user-full-name "Jason Chao"
       user-mail-address "jason@chao.com")
-
+#+end_src
+* UI 配置
+** 设置 doom theme、行号等
+#+begin_src emacs-lisp
 ;;(setq doom-theme 'doom-vibrant)
 (setq doom-theme 'doom-zenburn)
 (setq display-line-numbers-type t) ;;行号
@@ -11,9 +19,14 @@
 ;;字体
 ;;
 ;
-
+#+end_src
+** Dashboard 配置
+** 启动窗口大小
+#+begin_src emacs-lisp
 (pushnew! initial-frame-alist '(width . 220) '(height . 80))
-
+#+end_src
+** doom-modeline 配置
+#+begin_src emacs-lisp
 ;;默认修改中的文件名颜色是红色，这里改为orange
 (custom-set-faces!
   '(doom-modeline-buffer-modified :foreground "orange"))
@@ -37,11 +50,16 @@
   (nyan-mode t)) ;;彩虹猫
 ;; open dashboard
 ;;(map! :leader :desc "Dashboard" "d" #'+doom-dashboard/open)
-
+#+end_src
+* 通用配置
+** 自动保存
+#+begin_src emacs-lisp
 (setq auto-save-visited-mode t)
 (auto-save-visited-mode +1)
 (setq auto-revert-use-notify nil)
-
+#+end_src
+** Evil 模式下在窗口间快速移动
+#+begin_src emacs-lisp
 (map! :map evil-window-map
       "SPC" #'rotate-layout
       ;; 方向
@@ -55,14 +73,24 @@
       "C-<up>"     #'+evil/window-move-up
       "C-<right>"  #'+evil/window-move-right
       )
-
+#+end_src
+** 增加几个 Bookmark 命令
+- SPC b m：设置 bookmark
+- SPC b L：列出 bookmark
+- SPC b w：保存 bookmark 到一个文件中
+#+begin_src emacs-lisp
 (map! :leader
       (:prefix ("b". "buffer")
        :desc "List bookmarks" "L" #'list-bookmarks
        :desc "Save current bookmarks to bookmark file" "w" #'bookmark-save))
-
+#+end_src
+* Org-mode 配置
+** Org 默认目录
+#+begin_src emacs-lisp
 (after! org (setq org-directory "~/Org-Notes/"))
-
+#+end_src
+** 美化 Org
+#+begin_src emacs-lisp
 (add-hook 'org-mode-hook
           (lambda ()
             (variable-pitch-mode 1)
@@ -76,16 +104,24 @@
       org-pretty-entities t)
 ;;更改层级列表的样式
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
-
+#+end_src
+** 设置 TODO 的默认配置
+(t)代表快捷字母；!代表时间戳；@代表一个有时间戳的记录笔记
+#+begin_src emacs-lisp
 (after! org (setq org-todo-keywords
       '((sequence "TODO(t)" "IN-PROGRESS(i)" "WAITING(w)" "DELEGATED(e!)" "|" "DONE(d@/!)" "CANCELED(c@/!)"))))
-
+#+end_src
+** 设置 Org-agenda
+*** 配置可检索的 Agenda 文件
+#+begin_src emacs-lisp
 (after! org (setq org-agenda-files
       (quote ("~/Org-Notes/" "~/Org-Notes/work/" "~/Org-Notes/personal/"))))
 ;;设置默认的视图模式，doom默认为week视图，此配置暂时屏蔽
 ;;(setq org-agenda-span 'week)
 ;;(setq org-agenda-span 'day)
-
+#+end_src
+*** 学习 网上设置，设置新的 agenda 网格，以 3 小时为一单元
+#+begin_src emacs-lisp
 (setq org-agenda-time-grid (quote ((daily today require-timed)
                                    (300
                                     600
@@ -98,7 +134,9 @@
                                    "......"
                                    "-----------------------------------------------------"
                                    )))
-
+#+end_src
+*** 日记配置
+#+begin_src emacs-lisp
 ;;设置location，以便计算日出日落时间
 (setq calendar-longitude 116.9962)
 (setq calendar-latitude 39.91)
@@ -134,10 +172,14 @@
 (setq org-agenda-include-diary t)
 (setq org-agenda-diary-file "~/Org-Notes/personal/mydiary")
 (setq diary-file "~/Org-Notes/personal/mydiary")
-
+#+end_src
+*** 习惯配置
+#+begin_src emacs-lisp
 (add-to-list 'org-modules 'org-habit t)
 (setq org-habit-graph-column t)
-
+#+end_src
+*** Capture 模板配置
+#+begin_src emacs-lisp
 ;;自定义函数，用于定位everyday.org中的几个关键heading的位置
 (defun my-org-goto-last-worklog-headline ()
   "Move point to the last headline in file matching \"* WORKLOG\"."
@@ -175,6 +217,9 @@
                         my-org-goto-last-event-headline)
          "* %i%? \n%T"))))
 
+#+end_src
+*** newday 函数，用于在 everyday.org 中插入日结构
+#+begin_src emacs-lisp
 (defun newday ()
   (interactive)
   (progn
@@ -190,7 +235,9 @@
             "*** 今天有什么惊喜？ \n"
             "*** 今天有什么需要改进的地方？ \n"
             )))
-
+#+end_src
+** 简化文件插入链接
+#+begin_src emacs-lisp
 (defun +org-insert-file-link ()
   "Insert a file link.  At the prompt, enter the filename."
   (interactive)
@@ -200,7 +247,9 @@
       :map org-mode-map
       :localleader
       "l f" #'+org-insert-file-link)
-
+#+end_src
+* DIRED 配置
+#+begin_src emacs-lisp
 (map! :leader
       (:prefix ("d" . "dired")
        :desc "Open dired" "d" #'dired
@@ -250,17 +299,30 @@
   (kbd "j") 'peep-dired-next-file
   (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
-
+#+end_src
+* 其他包配置
+** ivy-rich：显示命令的详细描述
+#+begin_src emacs-lisp
 (require 'ivy-rich)
 (ivy-rich-mode 1)
 (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
-
+#+end_src
+** find-file-in-project：陈斌的插件，用于在项目中快速找到文件
+#+begin_src emacs-lisp
 (require 'find-file-in-project)
 (ivy-mode 1)
 (setq ffip-project-root "~/Org-Notes")
-
+#+end_src
+** Eros
+#+begin_quote
+来自:tool eval
+#+end_quote
+#+begin_src emacs-lisp
 (setq eros-eval-result-prefix "⟹ ") ; default =>
-
+#+end_src
+** Company
+来自:completion company
+#+begin_src emacs-lisp
 (after! company
   (setq company-idle-delay 0.5
         company-minimum-prefix-length 2)
@@ -269,17 +331,30 @@
 ;;增强history
 (setq-default history-length 1000)
 (setq-default prescient-history-length 1000)
-
+#+end_src
+** YASnippets
+来自:editor snippets，开启 snippets 嵌套支持
+#+begin_src emacs-lisp
 (setq yas-triggers-in-field t)
-
+#+end_src
+** Smart Parentheses
+来自:core packages，增加 org-mode 的配对
+#+begin_src emacs-lisp
 (sp-local-pair
  '(org-mode)
  "<<" ">>"
  :actions '(insert))
-
+#+end_src
+** AVY 配置：一个强大的方便跳转等操作的包
+来自:config default
+#+begin_src emacs-lisp
 (after! avy
   ;; home row priorities: 8 6 4 5 - - 1 2 3 7
   (setq avy-keys '(?n ?e ?i ?s ?t ?r ?i ?a)))
-
+#+end_src
+** Emojis
+来自:ui emoji
+#+begin_src emacs-lisp
 (use-package emojify
   :hook (after-init . global-emojify-mode))
+#+end_src

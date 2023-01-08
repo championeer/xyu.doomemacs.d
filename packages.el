@@ -8,10 +8,12 @@
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
-(package! org-download)
+;;(package! org-download)
 (package! keycast)
 (package! ivy-rich)
 (package! find-file-in-project)
+(package! org-modern)
+(package! nyan-mode)
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
