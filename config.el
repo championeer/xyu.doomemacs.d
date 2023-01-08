@@ -1,3 +1,5 @@
+;;; config.el -*- lexical-binding: t; -*-
+
 (setq user-full-name "Jason Chao"
       user-mail-address "jason@chao.com")
 
@@ -9,10 +11,41 @@
 (setq doom-fallback-buffer-name "► Doom"
       +doom-dashboard-name "► Doom")
 ;;字体
-;;
-;
+;;(set-face-attribute 'default nil :height 160)
+;;西文字体
+(setq doom-font (font-spec :family "Source Code Pro" :size 15)
+      doom-big-font (font-spec :family "Source Code Pro" :size 30)
+      doom-variable-pitch-font (font-spec :family "Source Code Variable" :size 15)
+      doom-unicode-font (font-spec :family "JuliaMono")
+      doom-serif-font (font-spec :family "TeX Gyre Cursor")
+      )
+;;中文字体
+;;(defun xyu/doom-init-ui-misc()
+;;  (menu-bar-mode -1)               ;; disable menu-bar
+;; (setq-default cursor-type 'box)  ;; set box style cursor
+;;  (blink-cursor-mode -1)           ;; cursor not blink
+ ;; <<doom-dashboard-layout>>
+;;  (if (display-graphic-p)
+;;      (progn
+        ;; NOTE: ONLY GUI
+        ;; set font
+;;        (dolist (charset '(kana han symbol cjk-misc bopomofo gb18030))
+;;          (set-fontset-font (frame-parameter nil 'font) charset
+;;                            (font-spec :family "Source Han Mono")))
+;;        (appendq! face-font-rescale-alist
+;;                  '(("Source Han Mono" . 1.2)
+;;                    ))
+  ;;      <<doom-image-banner>>
+        ;; random banner image from bing.com, NOTE: https://emacs-china.org/t/topic/264/33
+;;        )
+;;    (progn
+      ;; NOTE: ONLY TUI
+   ;;   <<doom-ascii-banner>>
+;;      )))
+;;(add-hook! 'doom-init-ui-hook #'xyu/doom-init-ui-misc)
 
-(pushnew! initial-frame-alist '(width . 220) '(height . 80))
+;;(pushnew! initial-frame-alist '(width . 220) '(height . 80))
+(add-hook! 'window-setup-hook #'toggle-frame-fullscreen)
 
 ;;默认修改中的文件名颜色是红色，这里改为orange
 (custom-set-faces!
@@ -37,6 +70,13 @@
   (nyan-mode t)) ;;彩虹猫
 ;; open dashboard
 ;;(map! :leader :desc "Dashboard" "d" #'+doom-dashboard/open)
+
+(global-set-key (kbd "s-a") 'mark-whole-buffer) ;;对应Windows上面的Ctrl-a 全选
+(global-set-key (kbd "s-c") 'kill-ring-save) ;;对应Windows上面的Ctrl-c 复制
+(global-set-key (kbd "s-s") 'save-buffer) ;; 对应Windows上面的Ctrl-s 保存
+(global-set-key (kbd "s-v") 'yank) ;对应Windows上面的Ctrl-v 粘贴
+(global-set-key (kbd "s-z") 'undo) ;对应Windows上面的Ctrol-z 撤销
+(global-set-key (kbd "s-x") 'kill-region) ;对应Windows上面的Ctrol-x 剪切
 
 (setq auto-save-visited-mode t)
 (auto-save-visited-mode +1)
