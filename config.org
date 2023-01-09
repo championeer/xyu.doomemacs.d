@@ -347,15 +347,15 @@
 * 其他包配置
 ** ivy-rich：显示命令的详细描述
 #+begin_src emacs-lisp
-(require 'ivy-rich)
-(ivy-rich-mode 1)
-(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+;;(require 'ivy-rich)
+;;(ivy-rich-mode 1)
+;;(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
 #+end_src
 ** find-file-in-project：陈斌的插件，用于在项目中快速找到文件
 #+begin_src emacs-lisp
-(require 'find-file-in-project)
-(ivy-mode 1)
-(setq ffip-project-root "~/Org-Notes")
+;;(require 'find-file-in-project)
+;;(ivy-mode 1)
+;;(setq ffip-project-root "~/Org-Notes")
 #+end_src
 ** Eros
 #+begin_quote

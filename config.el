@@ -291,13 +291,13 @@
   (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
 
-(require 'ivy-rich)
-(ivy-rich-mode 1)
-(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+;;(require 'ivy-rich)
+;;(ivy-rich-mode 1)
+;;(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
 
-(require 'find-file-in-project)
-(ivy-mode 1)
-(setq ffip-project-root "~/Org-Notes")
+;;(require 'find-file-in-project)
+;;(ivy-mode 1)
+;;(setq ffip-project-root "~/Org-Notes")
 
 (setq eros-eval-result-prefix "⟹ ") ; default =>
 
