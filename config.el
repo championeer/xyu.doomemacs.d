@@ -103,7 +103,7 @@
 
 (after! org (setq org-directory "~/Org-Notes/"))
 
-(add-hook 'org-mode-hook
+(after! org (add-hook 'org-mode-hook
           (lambda ()
             (variable-pitch-mode 1)
             visual-line-mode))
@@ -113,9 +113,9 @@
       org-odd-levels-only t
       ;;org-hide-leading-stars t
       org-log-done 'time
-      org-pretty-entities t)
+      org-pretty-entities t))
 ;;更改层级列表的样式
-(setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
+(after! org (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a."))))
 
 (after! org (setq org-todo-keywords
       '((sequence "TODO(t)" "IN-PROGRESS(i)" "WAITING(w)" "DELEGATED(e!)" "|" "DONE(d@/!)" "CANCELED(c@/!)"))))
@@ -171,12 +171,12 @@
       (capitalize-word 1)
       (buffer-substring start end))))
 ;;diary文件位置
-(setq org-agenda-include-diary t)
+(after! org (setq org-agenda-include-diary t)
 (setq org-agenda-diary-file "~/Org-Notes/personal/mydiary")
-(setq diary-file "~/Org-Notes/personal/mydiary")
+(setq diary-file "~/Org-Notes/personal/mydiary"))
 
-(add-to-list 'org-modules 'org-habit t)
-(setq org-habit-graph-column t)
+(after! org (add-to-list 'org-modules 'org-habit t)
+(setq org-habit-graph-column t))
 
 ;;自定义函数，用于定位everyday.org中的几个关键heading的位置
 (defun my-org-goto-last-worklog-headline ()

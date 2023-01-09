@@ -135,7 +135,7 @@
 #+end_src
 ** 美化 Org
 #+begin_src emacs-lisp
-(add-hook 'org-mode-hook
+(after! org (add-hook 'org-mode-hook
           (lambda ()
             (variable-pitch-mode 1)
             visual-line-mode))
@@ -145,9 +145,9 @@
       org-odd-levels-only t
       ;;org-hide-leading-stars t
       org-log-done 'time
-      org-pretty-entities t)
+      org-pretty-entities t))
 ;;更改层级列表的样式
-(setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
+(after! org (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a."))))
 #+end_src
 ** 设置 TODO 的默认配置
 (t)代表快捷字母；!代表时间戳；@代表一个有时间戳的记录笔记
@@ -213,14 +213,14 @@
       (capitalize-word 1)
       (buffer-substring start end))))
 ;;diary文件位置
-(setq org-agenda-include-diary t)
+(after! org (setq org-agenda-include-diary t)
 (setq org-agenda-diary-file "~/Org-Notes/personal/mydiary")
-(setq diary-file "~/Org-Notes/personal/mydiary")
+(setq diary-file "~/Org-Notes/personal/mydiary"))
 #+end_src
 *** 习惯配置
 #+begin_src emacs-lisp
-(add-to-list 'org-modules 'org-habit t)
-(setq org-habit-graph-column t)
+(after! org (add-to-list 'org-modules 'org-habit t)
+(setq org-habit-graph-column t))
 #+end_src
 *** Capture 模板配置
 #+begin_src emacs-lisp
