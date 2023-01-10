@@ -346,6 +346,7 @@
 #+end_src
 * 其他包配置
 ** ivy-rich：显示命令的详细描述
+(换用 vertico 系列包，暂时屏蔽)
 #+begin_src emacs-lisp
 ;;(require 'ivy-rich)
 ;;(ivy-rich-mode 1)
@@ -389,7 +390,7 @@
  "<<" ">>"
  :actions '(insert))
 #+end_src
-** AVY 配置：一个强大的方便跳转等操作的包
+** Avy 配置：一个强大的方便跳转等操作的包
 来自:config default
 #+begin_src emacs-lisp
 (after! avy
@@ -401,4 +402,185 @@
 #+begin_src emacs-lisp
 (use-package emojify
   :hook (after-init . global-emojify-mode))
+#+end_src
+** Org-roam 配置
+基于 org-mode 的双链笔记
+*** Org-roam
+#+begin_src emacs-lisp
+;;设置默认的org-roam目录
+(setq org-roam-directory (file-truename "~/Org-Notes/Roam/"))
+;;
+#+end_src
+
+#+begin_src emacs-lisp
+;;设置timestamp
+  (add-hook 'org-mode-hook (lambda ()
+                             (setq-local time-stamp-active t
+                                         time-stamp-start "#\\+MODIFIED:[ \t]*"
+                                         time-stamp-end "$"
+                                         time-stamp-format "\[%Y-%m-%d %3a %H:%M\]")
+                             (add-hook 'before-save-hook 'time-stamp nil 'local)))
+#+end_src
+
+#+begin_src emacs-lisp
+
+  (with-eval-after-load 'org-roam
+    (add-hook 'org-roam-mode-hook 'turn-on-visual-line-mode)
+    (add-hook 'org-roam-mode-hook 'word-wrap-whitespace-mode)
+
+    (org-roam-db-autosync-mode)
+
+    (setq org-roam-db-gc-threshold most-positive-fixnum)
+
+    (setq org-roam-mode-sections '(org-roam-backlinks-section
+                                   org-roam-reflinks-section
+                                   org-roam-unlinked-references-section))
+
+    (add-to-list 'display-buffer-alist
+                 '("\\*org-roam\\*"
+                   (display-buffer-in-side-window)
+                   (side . right)
+                   (window-width . 0.25))))
+#+end_src
+
+#+begin_src emacs-lisp
+
+  (with-eval-after-load 'org-roam
+    ;; Auto toggle org-roam-buffer.
+    (defun xyu/org-roam-buffer-show (_)
+      (if (and
+           ;; Don't do anything if we're in the minibuffer or in the calendar
+           (not (minibufferp))
+           (not (> 120 (frame-width)))
+           ;; (not (bound-and-true-p olivetti-mode))
+           (not (derived-mode-p 'calendar-mode))
+           ;; Show org-roam buffer iff the current buffer has a org-roam file
+           (xor (org-roam-file-p) (eq 'visible (org-roam-buffer--visibility))))
+      (org-roam-buffer-toggle)))
+    (add-hook 'window-buffer-change-functions 'xyu/org-roam-buffer-show)
+
+    ;; org-roam-capture
+    (setq org-roam-capture-templates
+          '(("e" "Newsletter" plain "%?"
+             :target (file+head "newsletter/${slug}.org"
+                                "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+             :unnarrowed t)
+            ("b" "Books" plain (file "~/.doom.d/template/readinglog")
+             :target (file+head "books/${slug}.org"
+                                "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+             :unnarrowed t)
+            ("d" "Diary" plain "%?"
+             :target (file+datetree "daily/<%Y-%m>.org" day))
+            ;;("n" "Note" plain "%?"
+            ;; :target (file+head "notes/note.org"
+            ;;                    "* %i%? :NOTE: \n created on %T\n")
+            ;; :unnarrowed t)
+            ("p" "people" plain (file "~/.doom.d/template/crm")
+             :target (file+head "crm/${slug}.org"
+                                "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+             :unnarrowed t)
+            ("r" "reference" plain (file "~/.doom.d/template/reference")
+             :target (file+head "ref/${citekey}.org"
+                                "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+             :unnarrowed t)
+            ("k" "PKM" plain "%?"
+             :target (file+head "PKM/${slug}.org"
+                                "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+             :unnarrowed t))))
+
+#+end_src
+#+begin_src emacs-lisp
+(with-eval-after-load 'org-roam
+  (cl-defmethod org-roam-node-type ((node org-roam-node))
+    "Return the TYPE of NODE."
+    (condition-case nil
+        (file-name-nondirectory
+         (directory-file-name
+          (file-name-directory
+           (file-relative-name (org-roam-node-file node) org-roam-directory))))
+      (error "")))
+
+  (cl-defmethod org-roam-node-directories ((node org-roam-node))
+    (if-let ((dirs (file-name-directory (file-relative-name (org-roam-node-file node) org-roam-directory))))
+        (format "(%s)" (car (split-string dirs "/")))
+      ""))
+
+  (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
+    (let* ((count (caar (org-roam-db-query
+                         [:select (funcall count source)
+                                  :from links
+                                  :where (= dest $s1)
+                                  :and (= type "id")]
+                         (org-roam-node-id node)))))
+      (format "[%d]" count)))
+
+  (cl-defmethod org-roam-node-doom-filetitle ((node org-roam-node))
+    "Return the value of \"#+title:\" (if any) from file that NODE resides in.
+   If there's no file-level title in the file, return empty string."
+    (or (if (= (org-roam-node-level node) 0)
+            (org-roam-node-title node)
+          (org-roam-get-keyword "TITLE" (org-roam-node-file node)))
+        ""))
+
+  (cl-defmethod org-roam-node-doom-hierarchy ((node org-roam-node))
+    "Return hierarchy for NODE, constructed of its file title, OLP and direct title.
+   If some elements are missing, they will be stripped out."
+    (let ((title     (org-roam-node-title node))
+          (olp       (org-roam-node-olp   node))
+          (level     (org-roam-node-level node))
+          (filetitle (org-roam-node-doom-filetitle node))
+          (separator (propertize " > " 'face 'shadow)))
+      (cl-case level
+        ;; node is a top-level file
+        (0 filetitle)
+        ;; node is a level 1 heading
+        (1 (concat (propertize filetitle 'face '(shadow italic))
+                   separator title))
+        ;; node is a heading with an arbitrary outline path
+        (t (concat (propertize filetitle 'face '(shadow italic))
+                   separator (propertize (string-join olp " > ") 'face '(shadow italic))
+                   separator title)))))
+
+  (setq org-roam-node-display-template (concat "${type:8} ${backlinkscount:3} ${doom-hierarchy:*}" (propertize "${tags:20}" 'face 'org-tag) " ")))
+
+
+(use-package! consult-org-roam)
+(use-package! consult-notes)
+
+;; transclusion
+(use-package! org-transclusion)
+
+;; https://org-roam.discourse.group/t/opening-url-in-roam-refs-field/2564/4?u=jousimies
+(defun gpc/open-node-roam-ref-url ()
+  "Open the URL in this node's ROAM_REFS property, if one exists."
+  (interactive)
+  (when-let ((ref-url (org-entry-get-with-inheritance "ROAM_REFS")))
+    (browse-url ref-url)))
+
+;; Get reading list from books directory for org-clock report.
+;; The org-clock report scope can be a function.
+(defun xyu/reading-list ()
+  "Get reading list."
+  (let (reading-list)
+    (append reading-list
+            (file-expand-wildcards (expand-file-name "~/Org-Notes/Roam/books/*.org")))))
+#+end_src
+*** Org-roam-ui
+org-roam 的图形展示前端，类似于 roam research 中的图谱
+#+begin_src emacs-lisp
+(use-package! websocket
+    :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+
 #+end_src
