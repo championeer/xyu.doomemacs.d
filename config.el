@@ -126,7 +126,7 @@
 ;;(setq org-agenda-span 'week)
 ;;(setq org-agenda-span 'day)
 
-(setq org-agenda-time-grid (quote ((daily today require-timed)
+(after! org (setq org-agenda-time-grid (quote ((daily today require-timed)
                                    (300
                                     600
                                     900
@@ -137,7 +137,7 @@
                                     2400)
                                    "......"
                                    "-----------------------------------------------------"
-                                   )))
+                                   ))))
 
 ;;设置location，以便计算日出日落时间
 (setq calendar-longitude 116.9962)
@@ -171,12 +171,12 @@
       (capitalize-word 1)
       (buffer-substring start end))))
 ;;diary文件位置
-(after! org (setq org-agenda-include-diary t)
-(setq org-agenda-diary-file "~/Org-Notes/personal/mydiary")
-(setq diary-file "~/Org-Notes/personal/mydiary"))
+(after! org (setq org-agenda-include-diary t))
+(after! org (setq org-agenda-diary-file "~/Org-Notes/personal/mydiary"))
+(after! org (setq diary-file "~/Org-Notes/personal/mydiary"))
 
-(after! org (add-to-list 'org-modules 'org-habit t)
-(setq org-habit-graph-column t))
+(after! org (add-to-list 'org-modules 'org-habit t))
+(after! org (setq org-habit-graph-column t))
 
 ;;自定义函数，用于定位everyday.org中的几个关键heading的位置
 (defun my-org-goto-last-worklog-headline ()
@@ -325,16 +325,16 @@
   :hook (after-init . global-emojify-mode))
 
 ;;设置默认的org-roam目录
-(setq org-roam-directory (file-truename "~/Org-Notes/Roam/"))
+(after! org-roam (setq org-roam-directory (file-truename "~/Org-Notes/Roam/")))
 ;;
 
 ;;设置timestamp
-  (add-hook 'org-mode-hook (lambda ()
+  (after! org (add-hook 'org-mode-hook (lambda ()
                              (setq-local time-stamp-active t
                                          time-stamp-start "#\\+MODIFIED:[ \t]*"
                                          time-stamp-end "$"
                                          time-stamp-format "\[%Y-%m-%d %3a %H:%M\]")
-                             (add-hook 'before-save-hook 'time-stamp nil 'local)))
+                             (add-hook 'before-save-hook 'time-stamp nil 'local))))
 
 (with-eval-after-load 'org-roam
   (add-hook 'org-roam-mode-hook 'turn-on-visual-line-mode)
@@ -380,10 +380,9 @@
            :unnarrowed t)
           ("d" "Diary" plain "%?"
            :target (file+datetree "daily/<%Y-%m>.org" day))
-          ;;("n" "Note" plain "%?"
-          ;; :target (file+head "notes/note.org"
-          ;;                    "* %i%? :NOTE: \n created on %T\n")
-          ;; :unnarrowed t)
+          ("n" "Note" plain "* %i%? :NOTE: \n created on %T\n"
+           :target (file "notes/note.org")
+           :unnarrowed t)
           ("p" "people" plain (file "~/.doom.d/template/crm")
            :target (file+head "crm/${slug}.org"
                               "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
@@ -486,3 +485,74 @@
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
+
+(use-package! pyim
+  :config
+  (require 'pyim-basedict)
+  (require 'pyim-cregexp-utils)
+  (pyim-basedict-enable)
+  ;; (setq default-input-method "pyim")
+
+  ;; 如果使用 popup page tooltip, 就需要加载 popup 包。
+  ;; (require 'popup nil t)
+  ;; (setq pyim-page-tooltip 'popup)
+
+  ;; 如果使用 pyim-dregcache dcache 后端，就需要加载 pyim-dregcache 包。
+  ;; (require 'pyim-dregcache)
+  ;; (setq pyim-dcache-backend 'pyim-dregcache)
+
+
+
+  ;; 显示5个候选词。
+  (setq pyim-page-length 5)
+
+  ;; 金手指设置，可以将光标处的编码，比如：拼音字符串，转换为中文。
+  ;; (global-set-key (kbd "M-j") 'pyim-convert-string-at-point)
+
+  ;; 按 "C-<return>" 将光标前的 regexp 转换为可以搜索中文的 regexp.
+  (define-key minibuffer-local-map (kbd "C-<return>") 'pyim-cregexp-convert-at-point)
+
+  ;; 我使用全拼
+  (pyim-default-scheme 'quanpin)
+  ;; (pyim-default-scheme 'wubi)
+  ;; (pyim-default-scheme 'cangjie)
+
+  ;; 我使用云拼音
+  ;; (setq pyim-cloudim 'baidu)
+
+  ;; pyim 探针设置
+  ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
+  ;; 我自己使用的中英文动态切换规则是：
+  ;; 1. 光标只有在注释里面时，才可以输入中文。
+  ;; 2. 光标前是汉字字符时，才能输入中文。
+  ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
+  ;; (setq-default pyim-english-input-switch-functions
+  ;;               '(pyim-probe-dynamic-english
+  ;;                 pyim-probe-isearch-mode
+  ;;                 pyim-probe-program-mode
+  ;;                 pyim-probe-org-structure-template))
+
+  ;; (setq-default pyim-punctuation-half-width-functions
+  ;;               '(pyim-probe-punctuation-line-beginning
+  ;;                 pyim-probe-punctuation-after-punctuation))
+
+  ;; 开启代码搜索中文功能（比如拼音，五笔码等）
+  (pyim-isearch-mode 1)
+  ;; 让 vertico, selectrum 等补全框架，通过 orderless 支持拼音搜索候选项功能。
+  (defun my-orderless-regexp (orig-func component)
+    (let ((result (funcall orig-func component)))
+      (pyim-cregexp-build result)))
+  ;; 以下解决 在vertico 搜索时按 C-n C-p 卡顿的问题
+  (defun xyu/pyim-advice-add ()
+    (advice-add 'orderless-regexp :around #'my-orderless-regexp))
+
+  (defun xyu/pyim-advice-remove (&optional n)
+    (advice-remove 'orderless-regexp #'my-orderless-regexp))
+
+  (advice-add  #'vertico-next :before #'xyu/pyim-advice-remove)
+  (advice-add  #'vertico-previous :before #'xyu/pyim-advice-remove)
+  (advice-add  'abort-recursive-edit :before #'xyu/pyim-advice-add)
+  (advice-add  'abort-minibuffers :before #'xyu/pyim-advice-add)
+  (advice-add  'exit-minibuffer :before #'xyu/pyim-advice-add)
+  (xyu/pyim-advice-add)   ;; 默认开启
+  )
