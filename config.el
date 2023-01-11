@@ -202,8 +202,8 @@
 (after! org (setq org-capture-templates
       '(("t" "TASK" entry (file+headline "work/task.org" "Tasks")
          "* TODO %i%? [/] :@work: \n %U\n From: %a\n")
-        ("n" "NOTE" entry (file "note.org")
-         "* %i%? :NOTE: \n created on %T\n From: %a\n")
+        ("n" "CAPTURE" entry (file "capture.org")
+         "* %i%? :IDEA: \n created on %T\n From: %a\n")
         ("m" "MEETING" entry (file+headline "work/meeting.org" "Meetings")
          "* TODO %i%? :MEETING:@work: \n created on %U\n")
         ("w" "WORKLOG" entry
@@ -374,8 +374,9 @@
            :unnarrowed t)
           ("d" "Diary" plain "%?"
            :target (file+datetree "daily/<%Y-%m>.org" day))
-          ("n" "Note" plain "* %i%? :NOTE: \n created on %T\n"
-           :target (file "notes/note.org")
+          ("n" "Note" plain "%?"
+           :target (file "notes/${slug}.org"
+                         "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
            :unnarrowed t)
           ("p" "people" plain (file "~/.doom.d/template/crm")
            :target (file+head "crm/${slug}.org"
