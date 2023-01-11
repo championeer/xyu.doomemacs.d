@@ -1,8 +1,18 @@
-;;; config.el -*- lexical-binding: t; -*-
+#+TITLE: XYU的Doom Emacs 配置
 
+* 系统设置
+#+begin_src emacs-lisp
+;;; config.el -*- lexical-binding: t; -*-
+#+end_src
+* 个人信息
+** 用于加密等
+#+begin_src emacs-lisp
 (setq user-full-name "Jason Chao"
       user-mail-address "jason@chao.com")
-
+#+end_src
+* UI 配置
+** 设置 doom theme、行号等
+#+begin_src emacs-lisp
 ;;(setq doom-theme 'doom-vibrant)
 (setq doom-theme 'doom-zenburn)
 (setq display-line-numbers-type t) ;;行号
@@ -43,10 +53,15 @@
    ;;   <<doom-ascii-banner>>
 ;;      )))
 ;;(add-hook! 'doom-init-ui-hook #'xyu/doom-init-ui-misc)
-
+#+end_src
+** Dashboard 配置
+** 启动窗口大小
+#+begin_src emacs-lisp
 ;;(pushnew! initial-frame-alist '(width . 220) '(height . 80))
 (add-hook! 'window-setup-hook #'toggle-frame-fullscreen)
-
+#+end_src
+** doom-modeline 配置
+#+begin_src emacs-lisp
 ;;默认修改中的文件名颜色是红色，这里改为orange
 (custom-set-faces!
   '(doom-modeline-buffer-modified :foreground "orange"))
@@ -70,7 +85,10 @@
   (nyan-mode t)) ;;彩虹猫
 ;; open dashboard
 ;;(map! :leader :desc "Dashboard" "d" #'+doom-dashboard/open)
-
+#+end_src
+* 通用配置
+** 常用的全局键绑定
+#+begin_src emacs-lisp
 ;;复制粘贴等，保持与系统习惯一致
 (global-set-key (kbd "s-a") 'mark-whole-buffer) ;;对应Windows上面的Ctrl-a 全选
 (global-set-key (kbd "s-c") 'kill-ring-save) ;;对应Windows上面的Ctrl-c 复制
@@ -81,11 +99,19 @@
 ;;调用常用的命令或函数
 (global-set-key (kbd "C-s") 'consult-line) ;;同“SPC s s”，类似于swiper的搜索方式
 (global-set-key (kbd "<f12>") 'org-roam-capture) ;;打开org-roam捕捉模板
+#+end_src
 
+#+RESULTS:
+: org-roam-capture
+
+** 自动保存
+#+begin_src emacs-lisp
 (setq auto-save-visited-mode t)
 (auto-save-visited-mode +1)
 (setq auto-revert-use-notify nil)
-
+#+end_src
+** Evil 模式下在窗口间快速移动
+#+begin_src emacs-lisp
 (map! :map evil-window-map
       "SPC" #'rotate-layout
       ;; 方向
@@ -99,14 +125,24 @@
       "C-<up>"     #'+evil/window-move-up
       "C-<right>"  #'+evil/window-move-right
       )
-
+#+end_src
+** 增加几个 Bookmark 命令
+- SPC b m：设置 bookmark
+- SPC b L：列出 bookmark
+- SPC b w：保存 bookmark 到一个文件中
+#+begin_src emacs-lisp
 (map! :leader
       (:prefix ("b". "buffer")
        :desc "List bookmarks" "L" #'list-bookmarks
        :desc "Save current bookmarks to bookmark file" "w" #'bookmark-save))
-
+#+end_src
+* Org-mode 配置
+** Org 默认目录
+#+begin_src emacs-lisp
 (after! org (setq org-directory "~/Org-Notes/"))
-
+#+end_src
+** 美化 Org
+#+begin_src emacs-lisp
 (after! org (add-hook 'org-mode-hook
           (lambda ()
             (variable-pitch-mode 1)
@@ -120,16 +156,24 @@
       org-pretty-entities t))
 ;;更改层级列表的样式
 (after! org (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a."))))
-
+#+end_src
+** 设置 TODO 的默认配置
+(t)代表快捷字母；!代表时间戳；@代表一个有时间戳的记录笔记
+#+begin_src emacs-lisp
 (after! org (setq org-todo-keywords
       '((sequence "TODO(t)" "IN-PROGRESS(i)" "WAITING(w)" "DELEGATED(e!)" "|" "DONE(d@/!)" "CANCELED(c@/!)"))))
-
+#+end_src
+** 设置 Org-agenda
+*** 配置可检索的 Agenda 文件
+#+begin_src emacs-lisp
 (after! org (setq org-agenda-files
       (quote ("~/Org-Notes/" "~/Org-Notes/work/" "~/Org-Notes/personal/"))))
 ;;设置默认的视图模式，doom默认为week视图，此配置暂时屏蔽
 ;;(setq org-agenda-span 'week)
 ;;(setq org-agenda-span 'day)
-
+#+end_src
+*** 学习 网上设置，设置新的 agenda 网格，以 3 小时为一单元
+#+begin_src emacs-lisp
 (after! org (setq org-agenda-time-grid (quote ((daily today require-timed)
                                    (300
                                     600
@@ -142,7 +186,9 @@
                                    "......"
                                    "-----------------------------------------------------"
                                    ))))
-
+#+end_src
+*** 日记配置
+#+begin_src emacs-lisp
 ;;设置location，以便计算日出日落时间
 (setq calendar-longitude 116.9962)
 (setq calendar-latitude 39.91)
@@ -178,10 +224,14 @@
 (after! org (setq org-agenda-include-diary t))
 (after! org (setq org-agenda-diary-file "~/Org-Notes/personal/mydiary"))
 (after! org (setq diary-file "~/Org-Notes/personal/mydiary"))
-
+#+end_src
+*** 习惯配置
+#+begin_src emacs-lisp
 (after! org (add-to-list 'org-modules 'org-habit t))
 (after! org (setq org-habit-graph-column t))
-
+#+end_src
+*** Capture 模板配置
+#+begin_src emacs-lisp
 ;;自定义函数，用于定位everyday.org中的几个关键heading的位置
 (defun my-org-goto-last-worklog-headline ()
   "Move point to the last headline in file matching \"* WORKLOG\"."
@@ -219,6 +269,9 @@
                         my-org-goto-last-event-headline)
          "* %i%? \n%T"))))
 
+#+end_src
+*** newday 函数，用于在 everyday.org 中插入日结构
+#+begin_src emacs-lisp
 (defun newday ()
   (interactive)
   (progn
@@ -234,7 +287,21 @@
             "*** 今天有什么惊喜？ \n"
             "*** 今天有什么需要改进的地方？ \n"
             )))
-
+#+end_src
+** 简化文件插入链接
+#+begin_src emacs-lisp
+(defun +org-insert-file-link ()
+  "Insert a file link.  At the prompt, enter the filename."
+  (interactive)
+  (insert (format "[[%s]]" (org-link-complete-file))))
+;;
+(map! :after org
+      :map org-mode-map
+      :localleader
+      "l f" #'+org-insert-file-link)
+#+end_src
+* DIRED 配置
+#+begin_src emacs-lisp
 (map! :leader
       (:prefix ("d" . "dired")
        :desc "Open dired" "d" #'dired
@@ -284,17 +351,31 @@
   (kbd "j") 'peep-dired-next-file
   (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
-
+#+end_src
+* 其他包配置
+** ivy-rich：显示命令的详细描述
+(换用 vertico 系列包，暂时屏蔽)
+#+begin_src emacs-lisp
 ;;(require 'ivy-rich)
 ;;(ivy-rich-mode 1)
 ;;(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
-
+#+end_src
+** find-file-in-project：陈斌的插件，用于在项目中快速找到文件
+#+begin_src emacs-lisp
 ;;(require 'find-file-in-project)
 ;;(ivy-mode 1)
 ;;(setq ffip-project-root "~/Org-Notes")
-
+#+end_src
+** Eros
+#+begin_quote
+来自:tool eval
+#+end_quote
+#+begin_src emacs-lisp
 (setq eros-eval-result-prefix "⟹ ") ; default =>
-
+#+end_src
+** Company
+来自:completion company,一套补全框架(vertico,orderless,marginalia,embark,consult)
+#+begin_src emacs-lisp
 (after! company
   (setq company-idle-delay 0.5
         company-minimum-prefix-length 2)
@@ -303,25 +384,43 @@
 ;;增强history
 (setq-default history-length 1000)
 (setq-default prescient-history-length 1000)
-
+#+end_src
+** YASnippets
+来自:editor snippets，开启 snippets 嵌套支持
+#+begin_src emacs-lisp
 (setq yas-triggers-in-field t)
-
+#+end_src
+** Smart Parentheses
+来自:core packages，增加 org-mode 的配对
+#+begin_src emacs-lisp
 (sp-local-pair
  '(org-mode)
  "<<" ">>"
  :actions '(insert))
-
+#+end_src
+** Avy 配置：一个强大的方便跳转等操作的包
+来自:config default
+#+begin_src emacs-lisp
 (after! avy
   ;; home row priorities: 8 6 4 5 - - 1 2 3 7
   (setq avy-keys '(?n ?e ?i ?s ?t ?r ?i ?a)))
-
+#+end_src
+** Emojis
+来自:ui emoji
+#+begin_src emacs-lisp
 (use-package emojify
   :hook (after-init . global-emojify-mode))
-
+#+end_src
+** Org-roam 配置
+基于 org-mode 的双链笔记
+*** Org-roam
+#+begin_src emacs-lisp
 ;;设置默认的org-roam目录
 (after! org-roam (setq org-roam-directory (file-truename "~/Org-Notes/Roam/")))
 ;;
+#+end_src
 
+#+begin_src emacs-lisp
 ;;设置timestamp
   (after! org (add-hook 'org-mode-hook (lambda ()
                              (setq-local time-stamp-active t
@@ -329,68 +428,76 @@
                                          time-stamp-end "$"
                                          time-stamp-format "\[%Y-%m-%d %3a %H:%M\]")
                              (add-hook 'before-save-hook 'time-stamp nil 'local))))
+#+end_src
 
-(after! 'org-roam
-  (add-hook 'org-roam-mode-hook 'turn-on-visual-line-mode)
-  (add-hook 'org-roam-mode-hook 'word-wrap-whitespace-mode)
+#+begin_src emacs-lisp
 
-  (org-roam-db-autosync-mode)
+  (with-eval-after-load 'org-roam
+    (add-hook 'org-roam-mode-hook 'turn-on-visual-line-mode)
+    (add-hook 'org-roam-mode-hook 'word-wrap-whitespace-mode)
 
-  (setq org-roam-db-gc-threshold most-positive-fixnum)
+    (org-roam-db-autosync-mode)
 
-  (setq org-roam-mode-sections '(org-roam-backlinks-section
-                                 org-roam-reflinks-section
-                                 org-roam-unlinked-references-section))
+    (setq org-roam-db-gc-threshold most-positive-fixnum)
 
-  (add-to-list 'display-buffer-alist
-               '("\\*org-roam\\*"
-                 (display-buffer-in-side-window)
-                 (side . right)
-                 (window-width . 0.25))))
+    (setq org-roam-mode-sections '(org-roam-backlinks-section
+                                   org-roam-reflinks-section
+                                   org-roam-unlinked-references-section))
 
-(after! 'org-roam
-  ;; Auto toggle org-roam-buffer.
-  (defun xyu/org-roam-buffer-show (_)
-    (if (and
-         ;; Don't do anything if we're in the minibuffer or in the calendar
-         (not (minibufferp))
-         (not (> 120 (frame-width)))
-         ;; (not (bound-and-true-p olivetti-mode))
-         (not (derived-mode-p 'calendar-mode))
-         ;; Show org-roam buffer iff the current buffer has a org-roam file
-         (xor (org-roam-file-p) (eq 'visible (org-roam-buffer--visibility))))
-    (org-roam-buffer-toggle)))
-  (add-hook 'window-buffer-change-functions 'xyu/org-roam-buffer-show)
+    (add-to-list 'display-buffer-alist
+                 '("\\*org-roam\\*"
+                   (display-buffer-in-side-window)
+                   (side . right)
+                   (window-width . 0.25))))
+#+end_src
 
-  ;; org-roam-capture
-  (setq org-roam-capture-templates
-        '(("e" "Newsletter" plain "%?"
-           :target (file+head "newsletter/${slug}.org"
-                              "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
-           :unnarrowed t)
-          ("b" "Books" plain (file "~/.doom.d/template/readinglog")
-           :target (file+head "books/${slug}.org"
-                              "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
-           :unnarrowed t)
-          ("d" "Diary" plain "%?"
-           :target (file+datetree "daily/<%Y-%m>.org" day))
-          ("n" "Note" plain "* %i%? :NOTE: \n created on %T\n"
-           :target (file "notes/note.org")
-           :unnarrowed t)
-          ("p" "people" plain (file "~/.doom.d/template/crm")
-           :target (file+head "crm/${slug}.org"
-                              "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
-           :unnarrowed t)
-          ("r" "reference" plain (file "~/.doom.d/template/reference")
-           :target (file+head "ref/${citekey}.org"
-                              "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
-           :unnarrowed t)
-          ("k" "PKM" plain "%?"
-           :target (file+head "PKM/${slug}.org"
-                              "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
-           :unnarrowed t))))
+#+begin_src emacs-lisp
 
-(after! 'org-roam
+  (with-eval-after-load 'org-roam
+    ;; Auto toggle org-roam-buffer.
+    (defun xyu/org-roam-buffer-show (_)
+      (if (and
+           ;; Don't do anything if we're in the minibuffer or in the calendar
+           (not (minibufferp))
+           (not (> 120 (frame-width)))
+           ;; (not (bound-and-true-p olivetti-mode))
+           (not (derived-mode-p 'calendar-mode))
+           ;; Show org-roam buffer iff the current buffer has a org-roam file
+           (xor (org-roam-file-p) (eq 'visible (org-roam-buffer--visibility))))
+      (org-roam-buffer-toggle)))
+    (add-hook 'window-buffer-change-functions 'xyu/org-roam-buffer-show)
+
+    ;; org-roam-capture
+    (setq org-roam-capture-templates
+          '(("e" "Newsletter" plain "%?"
+             :target (file+head "newsletter/${slug}.org"
+                                "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+             :unnarrowed t)
+            ("b" "Books" plain (file "~/.doom.d/template/readinglog")
+             :target (file+head "books/${slug}.org"
+                                "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+             :unnarrowed t)
+            ("d" "Diary" plain "%?"
+             :target (file+datetree "daily/<%Y-%m>.org" day))
+            ("n" "Note" plain "* %i%? :NOTE: \n created on %T\n"
+             :target (file "notes/note.org")
+             :unnarrowed t)
+            ("p" "people" plain (file "~/.doom.d/template/crm")
+             :target (file+head "crm/${slug}.org"
+                                "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+             :unnarrowed t)
+            ("r" "reference" plain (file "~/.doom.d/template/reference")
+             :target (file+head "ref/${citekey}.org"
+                                "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+             :unnarrowed t)
+            ("k" "PKM" plain "%?"
+             :target (file+head "PKM/${slug}.org"
+                                "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+             :unnarrowed t))))
+
+#+end_src
+#+begin_src emacs-lisp
+(with-eval-after-load 'org-roam
   (cl-defmethod org-roam-node-type ((node org-roam-node))
     "Return the TYPE of NODE."
     (condition-case nil
@@ -464,7 +571,10 @@
   (let (reading-list)
     (append reading-list
             (file-expand-wildcards (expand-file-name "~/Org-Notes/Roam/books/*.org")))))
-
+#+end_src
+*** Org-roam-ui
+org-roam 的图形展示前端，类似于 roam research 中的图谱
+#+begin_src emacs-lisp
 (use-package! websocket
     :after org-roam)
 
@@ -480,16 +590,10 @@
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
 
-(defun +org-insert-file-link ()
-  "Insert a file link.  At the prompt, enter the filename."
-  (interactive)
-  (insert (format "[[%s]]" (org-link-complete-file))))
-;;
-(map! :after org
-      :map org-mode-map
-      :localleader
-      "l f" #'+org-insert-file-link)
-
+#+end_src
+** Pyim/Pyim-basedict
+给 vertico 等搜索补全框架提供拼音支持
+#+begin_src emacs-lisp
 (use-package! pyim
   :config
   (require 'pyim-basedict)
@@ -561,79 +665,4 @@
   (xyu/pyim-advice-add)   ;; 默认开启
   )
 
-(add-hook 'doc-view-mode-hook 'pdf-tools-install)
-
-;;(when (maybe-require-package 'pdf-tools)
-
-  (after! 'pdf-tools
-    (setq-default pdf-view-display-size 'fit-width))
-
-  (add-hook 'pdf-tools-enabled-hook
-            #'(lambda ()
-                (if (string-equal "dark" (frame-parameter nil 'background-mode))
-                    (pdf-view-themed-minor-mode 1))))
-
-  (setq pdf-view-use-unicode-ligther nil)
-  (setq pdf-view-use-scaling t)
-  (setq pdf-view-use-imagemagick nil)
-  (setq pdf-annot-activate-created-annotations nil)
-
-  (defun xyu/get-file-name ()
-    "Copy pdf file name."
-    (interactive)
-    (kill-new (file-name-base (buffer-file-name)))
-    (message "Copied %s" (file-name-base (buffer-file-name))))
-
-  (after! 'pdf-view
-  ;;   (define-key pdf-view-mode-map (kbd "w") 'my/get-file-name)
-  ;;   (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
-  ;;   (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
-  ;;   (define-key pdf-view-mode-map (kbd "d") 'pdf-annot-delete)
-  ;;   (define-key pdf-view-mode-map (kbd "q") 'kill-this-buffer)
-  ;;   (define-key pdf-view-mode-map (kbd "y") 'pdf-view-kill-ring-save)
-  ;;   (define-key pdf-view-mode-map (kbd "G") 'pdf-view-goto-page))
-    (define-key pdf-view-mode-map [remap pdf-misc-print-document] 'mrb/pdf-misc-print-pages))
-
-  (after! 'pdf-outline
-    (define-key pdf-outline-buffer-mode-map (kbd "<RET>") 'pdf-outline-follow-link-and-quit))
-
-  (after! 'pdf-annot
-    (define-key pdf-annot-edit-contents-minor-mode-map (kbd "<return>") 'pdf-annot-edit-contents-commit)
-    (define-key pdf-annot-edit-contents-minor-mode-map (kbd "<S-return>") 'newline))
-
-  (after! 'pdf-cache
-    (define-pdf-cache-function pagelabels))
-
-  (after! 'pdf-misc
-    (setq pdf-misc-print-program-executable "/usr/bin/lp")
-
-    (defun mrb/pdf-misc-print-pages(filename pages &optional interactive-p)
-      "Wrapper for `pdf-misc-print-document` to add page selection support."
-      (interactive (list (pdf-view-buffer-file-name)
-                         (read-string "Page range (empty for all pages): "
-                                      (number-to-string (pdf-view-current-page)))
-                         t) pdf-view-mode)
-      (let ((pdf-misc-print-program-args
-             (if (not (string-blank-p pages))
-       (cons (concat "-P " pages) pdf-misc-print-program-args)
-       pdf-misc-print-program-args)))
-        (pdf-misc-print-document filename))))
-
-(defun xyu/pdf-extract-highlight ()
-  "Extract highlight to plain text."
-  (interactive)
-  (let* ((pdf-filename (buffer-name))
-         (txt-filename (make-temp-name "/tmp/tabula-"))
-         (buffer (generate-new-buffer
-                  (generate-new-buffer-name (format "*pdftohighlight<%s>*"
-                                                    pdf-filename)))))
-    (shell-command (format "python3 ~/pdfannots/pdfannots.py \"%s\" -o \"%s\""
-                           pdf-filename txt-filename) nil)
-    (switch-to-buffer buffer)
-    (insert-file-contents txt-filename)
-    (delete-file txt-filename)))
-
-;;(when (maybe-require-package 'nov)
-;;  (setq nov-unzip-program (executable-find "bsdtar")
-;;        nov-unzip-args '("-xC" directory "-f" filename))
-;;  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
+#+end_src

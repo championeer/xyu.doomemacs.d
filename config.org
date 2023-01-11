@@ -87,15 +87,23 @@
 ;;(map! :leader :desc "Dashboard" "d" #'+doom-dashboard/open)
 #+end_src
 * 通用配置
-** 增加常规的复制粘贴快捷键
+** 常用的全局键绑定
 #+begin_src emacs-lisp
+;;复制粘贴等，保持与系统习惯一致
 (global-set-key (kbd "s-a") 'mark-whole-buffer) ;;对应Windows上面的Ctrl-a 全选
 (global-set-key (kbd "s-c") 'kill-ring-save) ;;对应Windows上面的Ctrl-c 复制
 (global-set-key (kbd "s-s") 'save-buffer) ;; 对应Windows上面的Ctrl-s 保存
 (global-set-key (kbd "s-v") 'yank) ;对应Windows上面的Ctrl-v 粘贴
 (global-set-key (kbd "s-z") 'undo) ;对应Windows上面的Ctrol-z 撤销
 (global-set-key (kbd "s-x") 'kill-region) ;对应Windows上面的Ctrol-x 剪切
+;;调用常用的命令或函数
+(global-set-key (kbd "C-s") 'consult-line) ;;同“SPC s s”，类似于swiper的搜索方式
+(global-set-key (kbd "<f12>") 'org-roam-capture) ;;打开org-roam捕捉模板
 #+end_src
+
+#+RESULTS:
+: org-roam-capture
+
 ** 自动保存
 #+begin_src emacs-lisp
 (setq auto-save-visited-mode t)
@@ -280,18 +288,6 @@
             "*** 今天有什么需要改进的地方？ \n"
             )))
 #+end_src
-** 简化文件插入链接
-#+begin_src emacs-lisp
-(defun +org-insert-file-link ()
-  "Insert a file link.  At the prompt, enter the filename."
-  (interactive)
-  (insert (format "[[%s]]" (org-link-complete-file))))
-;;
-(map! :after org
-      :map org-mode-map
-      :localleader
-      "l f" #'+org-insert-file-link)
-#+end_src
 * DIRED 配置
 #+begin_src emacs-lisp
 (map! :leader
@@ -366,7 +362,7 @@
 (setq eros-eval-result-prefix "⟹ ") ; default =>
 #+end_src
 ** Company
-来自:completion company,一套补全框架
+来自:completion company,一套补全框架(vertico,orderless,marginalia,embark,consult)
 #+begin_src emacs-lisp
 (after! company
   (setq company-idle-delay 0.5
@@ -424,7 +420,7 @@
 
 #+begin_src emacs-lisp
 
-  (with-eval-after-load 'org-roam
+  (after! 'org-roam
     (add-hook 'org-roam-mode-hook 'turn-on-visual-line-mode)
     (add-hook 'org-roam-mode-hook 'word-wrap-whitespace-mode)
 
@@ -445,7 +441,7 @@
 
 #+begin_src emacs-lisp
 
-  (with-eval-after-load 'org-roam
+  (after! 'org-roam
     ;; Auto toggle org-roam-buffer.
     (defun xyu/org-roam-buffer-show (_)
       (if (and
@@ -489,7 +485,7 @@
 
 #+end_src
 #+begin_src emacs-lisp
-(with-eval-after-load 'org-roam
+(after! 'org-roam
   (cl-defmethod org-roam-node-type ((node org-roam-node))
     "Return the TYPE of NODE."
     (condition-case nil
@@ -583,6 +579,18 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
           org-roam-ui-open-on-start t))
 
 #+end_src
+*** 简化文件插入链接
+#+begin_src emacs-lisp
+(defun +org-insert-file-link ()
+  "Insert a file link.  At the prompt, enter the filename."
+  (interactive)
+  (insert (format "[[%s]]" (org-link-complete-file))))
+;;
+(map! :after org
+      :map org-mode-map
+      :localleader
+      "l f" #'+org-insert-file-link)
+#+end_src
 ** Pyim/Pyim-basedict
 给 vertico 等搜索补全框架提供拼音支持
 #+begin_src emacs-lisp
@@ -656,5 +664,85 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
   (advice-add  'exit-minibuffer :before #'xyu/pyim-advice-add)
   (xyu/pyim-advice-add)   ;; 默认开启
   )
+
+#+end_src
+** PDF等电子文件阅读(pdf-tools、nov.el等)
+#+begin_src emacs-lisp
+(add-hook 'doc-view-mode-hook 'pdf-tools-install)
+
+;;(when (maybe-require-package 'pdf-tools)
+
+  (after! 'pdf-tools
+    (setq-default pdf-view-display-size 'fit-width))
+
+  (add-hook 'pdf-tools-enabled-hook
+            #'(lambda ()
+                (if (string-equal "dark" (frame-parameter nil 'background-mode))
+                    (pdf-view-themed-minor-mode 1))))
+
+  (setq pdf-view-use-unicode-ligther nil)
+  (setq pdf-view-use-scaling t)
+  (setq pdf-view-use-imagemagick nil)
+  (setq pdf-annot-activate-created-annotations nil)
+
+  (defun xyu/get-file-name ()
+    "Copy pdf file name."
+    (interactive)
+    (kill-new (file-name-base (buffer-file-name)))
+    (message "Copied %s" (file-name-base (buffer-file-name))))
+
+  (after! 'pdf-view
+  ;;   (define-key pdf-view-mode-map (kbd "w") 'my/get-file-name)
+  ;;   (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
+  ;;   (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
+  ;;   (define-key pdf-view-mode-map (kbd "d") 'pdf-annot-delete)
+  ;;   (define-key pdf-view-mode-map (kbd "q") 'kill-this-buffer)
+  ;;   (define-key pdf-view-mode-map (kbd "y") 'pdf-view-kill-ring-save)
+  ;;   (define-key pdf-view-mode-map (kbd "G") 'pdf-view-goto-page))
+    (define-key pdf-view-mode-map [remap pdf-misc-print-document] 'mrb/pdf-misc-print-pages))
+
+  (after! 'pdf-outline
+    (define-key pdf-outline-buffer-mode-map (kbd "<RET>") 'pdf-outline-follow-link-and-quit))
+
+  (after! 'pdf-annot
+    (define-key pdf-annot-edit-contents-minor-mode-map (kbd "<return>") 'pdf-annot-edit-contents-commit)
+    (define-key pdf-annot-edit-contents-minor-mode-map (kbd "<S-return>") 'newline))
+
+  (after! 'pdf-cache
+    (define-pdf-cache-function pagelabels))
+
+  (after! 'pdf-misc
+    (setq pdf-misc-print-program-executable "/usr/bin/lp")
+
+    (defun mrb/pdf-misc-print-pages(filename pages &optional interactive-p)
+      "Wrapper for `pdf-misc-print-document` to add page selection support."
+      (interactive (list (pdf-view-buffer-file-name)
+                         (read-string "Page range (empty for all pages): "
+                                      (number-to-string (pdf-view-current-page)))
+                         t) pdf-view-mode)
+      (let ((pdf-misc-print-program-args
+             (if (not (string-blank-p pages))
+       (cons (concat "-P " pages) pdf-misc-print-program-args)
+       pdf-misc-print-program-args)))
+        (pdf-misc-print-document filename))))
+
+(defun xyu/pdf-extract-highlight ()
+  "Extract highlight to plain text."
+  (interactive)
+  (let* ((pdf-filename (buffer-name))
+         (txt-filename (make-temp-name "/tmp/tabula-"))
+         (buffer (generate-new-buffer
+                  (generate-new-buffer-name (format "*pdftohighlight<%s>*"
+                                                    pdf-filename)))))
+    (shell-command (format "python3 ~/pdfannots/pdfannots.py \"%s\" -o \"%s\""
+                           pdf-filename txt-filename) nil)
+    (switch-to-buffer buffer)
+    (insert-file-contents txt-filename)
+    (delete-file txt-filename)))
+
+;;(when (maybe-require-package 'nov)
+;;  (setq nov-unzip-program (executable-find "bsdtar")
+;;        nov-unzip-args '("-xC" directory "-f" filename))
+;;  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 
 #+end_src
