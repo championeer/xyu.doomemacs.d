@@ -330,7 +330,7 @@
                                          time-stamp-format "\[%Y-%m-%d %3a %H:%M\]")
                              (add-hook 'before-save-hook 'time-stamp nil 'local))))
 
-(after! 'org-roam
+(after! org-roam
   (add-hook 'org-roam-mode-hook 'turn-on-visual-line-mode)
   (add-hook 'org-roam-mode-hook 'word-wrap-whitespace-mode)
 
@@ -348,7 +348,7 @@
                  (side . right)
                  (window-width . 0.25))))
 
-(after! 'org-roam
+(after! org-roam
   ;; Auto toggle org-roam-buffer.
   (defun xyu/org-roam-buffer-show (_)
     (if (and
@@ -375,7 +375,7 @@
           ("d" "Diary" plain "%?"
            :target (file+datetree "daily/<%Y-%m>.org" day))
           ("n" "Note" plain "%?"
-           :target (file "notes/${slug}.org"
+           :target (file+head "notes/${slug}.org"
                          "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
            :unnarrowed t)
           ("p" "people" plain (file "~/.doom.d/template/crm")
@@ -391,7 +391,7 @@
                               "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
            :unnarrowed t))))
 
-(after! 'org-roam
+(after! org-roam
   (cl-defmethod org-roam-node-type ((node org-roam-node))
     "Return the TYPE of NODE."
     (condition-case nil
