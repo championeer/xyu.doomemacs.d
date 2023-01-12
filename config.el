@@ -82,6 +82,23 @@
 (global-set-key (kbd "C-s") 'consult-line) ;;同“SPC s s”，类似于swiper的搜索方式
 (global-set-key (kbd "<f12>") 'org-roam-capture) ;;打开org-roam捕捉模板
 
+(setq-default
+ delete-by-moving-to-trash t        ; 将文件删除到回收站
+ window-combination-resize t        ; 从其他窗口获取新窗口的大小
+ x-stretch-cursor t                 ; 将光标拉伸到字形宽度
+ )
+
+(setq! undo-limit 104857600         ; 重置撤销限制到 100 MiB
+       ;;auto-save-default t          ; 没有人喜欢丢失工作，我也是如此
+       truncate-string-ellipsis "…" ; Unicode 省略号相比 ascii 更好
+                                    ; 同时节省 /宝贵的/ 空间
+       password-cache-expiry nil    ; 我能信任我的电脑 ... 或不能?
+       ; scroll-preserve-screen-position 'always
+                                    ; 不要让 `点' (光标) 跳来跳去
+       scroll-margin 2              ; 适当保持一点点边距
+       gc-cons-threshold 1073741824
+       read-process-output-max 1048576
+       )
 (setq auto-save-visited-mode t)
 (auto-save-visited-mode +1)
 (setq auto-revert-use-notify nil)
@@ -125,7 +142,7 @@
       '((sequence "TODO(t)" "IN-PROGRESS(i)" "WAITING(w)" "DELEGATED(e!)" "|" "DONE(d@/!)" "CANCELED(c@/!)"))))
 
 (after! org (setq org-agenda-files
-      (quote ("~/Org-Notes/" "~/Org-Notes/work/" "~/Org-Notes/personal/"))))
+      (quote ("~/Org-Notes/" "~/Org-Notes/GTD/"))))
 ;;设置默认的视图模式，doom默认为week视图，此配置暂时屏蔽
 ;;(setq org-agenda-span 'week)
 ;;(setq org-agenda-span 'day)
@@ -200,11 +217,13 @@
 
 ;; org-capture模板
 (after! org (setq org-capture-templates
-      '(("t" "TASK" entry (file+headline "work/task.org" "Tasks")
-         "* TODO %i%? [/] :@work: \n %U\n From: %a\n")
+      '(("t" "TASK" entry (file+headline "GTD/task.org" "Tasks")
+         "* TODO %i%? [/] :@work: \n %U\n")
+        ("p" "PROJECT" entry (file "GTD/project.org" "Projects")
+         "* STARTUP %i%? [%] :PROJECT:@work: \n created on %U\n")
         ("n" "CAPTURE" entry (file "capture.org")
          "* %i%? :IDEA: \n created on %T\n From: %a\n")
-        ("m" "MEETING" entry (file+headline "work/meeting.org" "Meetings")
+        ("m" "MEETING" entry (file+headline "GTD/meeting.org" "Meetings")
          "* TODO %i%? :MEETING:@work: \n created on %U\n")
         ("w" "WORKLOG" entry
          (file+function "everyday.org"
@@ -238,7 +257,7 @@
 (map! :leader
       (:prefix ("d" . "dired")
        :desc "Open dired" "d" #'dired
-       :desc "Dired jump to current" "j" #'dired-jump)
+       :desc "Dired jump to current" "j" #'dired-jump) ;;跳转到buffer所在的目录
       (:after dired
        (:map dired-mode-map
         :desc "Peep-dired image previews" "d p" #'peep-dired
@@ -318,7 +337,6 @@
 (use-package emojify
   :hook (after-init . global-emojify-mode))
 
-;;设置默认的org-roam目录
 (after! org-roam (setq org-roam-directory (file-truename "~/Org-Notes/Roam/")))
 ;;
 
@@ -444,7 +462,6 @@
 
   (setq org-roam-node-display-template (concat "${type:8} ${backlinkscount:3} ${doom-hierarchy:*}" (propertize "${tags:20}" 'face 'org-tag) " ")))
 
-
 (use-package! consult-org-roam)
 (use-package! consult-notes)
 
@@ -566,7 +583,7 @@
 
 ;;(when (maybe-require-package 'pdf-tools)
 
-  (after! 'pdf-tools
+  (after! pdf-tools
     (setq-default pdf-view-display-size 'fit-width))
 
   (add-hook 'pdf-tools-enabled-hook
@@ -585,7 +602,7 @@
     (kill-new (file-name-base (buffer-file-name)))
     (message "Copied %s" (file-name-base (buffer-file-name))))
 
-  (after! 'pdf-view
+  (after! pdf-view
   ;;   (define-key pdf-view-mode-map (kbd "w") 'my/get-file-name)
   ;;   (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
   ;;   (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
@@ -595,17 +612,17 @@
   ;;   (define-key pdf-view-mode-map (kbd "G") 'pdf-view-goto-page))
     (define-key pdf-view-mode-map [remap pdf-misc-print-document] 'mrb/pdf-misc-print-pages))
 
-  (after! 'pdf-outline
+  (after! pdf-outline
     (define-key pdf-outline-buffer-mode-map (kbd "<RET>") 'pdf-outline-follow-link-and-quit))
 
-  (after! 'pdf-annot
+  (after! pdf-annot
     (define-key pdf-annot-edit-contents-minor-mode-map (kbd "<return>") 'pdf-annot-edit-contents-commit)
     (define-key pdf-annot-edit-contents-minor-mode-map (kbd "<S-return>") 'newline))
 
-  (after! 'pdf-cache
+  (after! pdf-cache
     (define-pdf-cache-function pagelabels))
 
-  (after! 'pdf-misc
+  (after! pdf-misc
     (setq pdf-misc-print-program-executable "/usr/bin/lp")
 
     (defun mrb/pdf-misc-print-pages(filename pages &optional interactive-p)
