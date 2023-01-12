@@ -219,7 +219,7 @@
 (after! org (setq org-capture-templates
       '(("t" "TASK" entry (file+headline "GTD/task.org" "Tasks")
          "* TODO %i%? [/] :@work: \n %U\n")
-        ("p" "PROJECT" entry (file "GTD/project.org" "Projects")
+        ("p" "PROJECT" entry (file "GTD/project.org")
          "* STARTUP %i%? [%] :PROJECT:@work: \n created on %U\n")
         ("n" "CAPTURE" entry (file "capture.org")
          "* %i%? :IDEA: \n created on %T\n From: %a\n")
@@ -341,7 +341,7 @@
 ;;
 
 ;;设置timestamp
-  (after! org (add-hook 'org-mode-hook (lambda ()
+  (after! org-roam (add-hook 'org-mode-hook (lambda ()
                              (setq-local time-stamp-active t
                                          time-stamp-start "#\\+MODIFIED:[ \t]*"
                                          time-stamp-end "$"
@@ -395,6 +395,10 @@
           ("n" "Note" plain "%?"
            :target (file+head "notes/${slug}.org"
                          "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+           :unnarrowed t)
+          ("w" "Work" plain "%?"
+           :target (file+head "work/${slug}.org"
+                         "#TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
            :unnarrowed t)
           ("p" "people" plain (file "~/.doom.d/template/crm")
            :target (file+head "crm/${slug}.org"
