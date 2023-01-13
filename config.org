@@ -492,7 +492,7 @@
              :unnarrowed t)
             ("w" "Work" plain "%?"
              :target (file+head "work/${slug}.org"
-                           "#TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+                           "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
              :unnarrowed t)
             ("p" "people" plain (file "~/.doom.d/template/crm")
              :target (file+head "crm/${slug}.org"
