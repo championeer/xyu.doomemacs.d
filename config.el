@@ -221,7 +221,7 @@
          "* TODO %i%? [/] :@work: \n %U\n")
         ("p" "PROJECT" entry (file "GTD/project.org")
          "* STARTUP %i%? [%] :PROJECT:@work: \n created on %U\n")
-        ("n" "CAPTURE" entry (file "capture.org")
+        ("c" "CAPTURE" entry (file "capture.org")
          "* %i%? :IDEA: \n created on %T\n From: %a\n")
         ("m" "MEETING" entry (file+headline "GTD/meeting.org" "Meetings")
          "* TODO %i%? :MEETING:@work: \n created on %U\n")
