@@ -261,7 +261,7 @@
       (:after dired
        (:map dired-mode-map
         :desc "Peep-dired image previews" "d p" #'peep-dired
-        :desc "Dired view file" "d v" #'dired-view-file)))
+        :desc "Dired view file" "d v" #'dired-view-file))) ;;peep-dired 预览文件内容
 
 (evil-define-key 'normal dired-mode-map
   (kbd "M-RET") 'dired-display-file
@@ -303,6 +303,8 @@
   (kbd "j") 'peep-dired-next-file
   (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+;;
+(setq dired-dwim-target t) ;;打开两个窗口，在一个窗口复制或移动文件时直接定位到另一个窗口
 
 ;;(require 'ivy-rich)
 ;;(ivy-rich-mode 1)
