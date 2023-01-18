@@ -254,91 +254,6 @@
             "*** 今天有什么需要改进的地方？ \n"
             )))
 
-(map! :leader
-      (:prefix ("d" . "dired")
-       :desc "Open dired" "d" #'dired
-       :desc "Dired jump to current" "j" #'dired-jump) ;;跳转到buffer所在的目录
-      (:after dired
-       (:map dired-mode-map
-        :desc "Peep-dired image previews" "d p" #'peep-dired
-        :desc "Dired view file" "d v" #'dired-view-file))) ;;peep-dired 预览文件内容
-
-(evil-define-key 'normal dired-mode-map
-  (kbd "M-RET") 'dired-display-file
-  (kbd "h") 'dired-up-directory
-  (kbd "l") 'dired-open-file ; use dired-find-file instead of dired-open.
-  (kbd "m") 'dired-mark
-  (kbd "t") 'dired-toggle-marks
-  (kbd "u") 'dired-unmark
-  (kbd "C") 'dired-do-copy
-  (kbd "D") 'dired-do-delete
-  (kbd "J") 'dired-goto-file
-  (kbd "M") 'dired-do-chmod
-  (kbd "O") 'dired-do-chown
-  (kbd "P") 'dired-do-print
-  (kbd "R") 'dired-do-rename
-  (kbd "T") 'dired-do-touch
-  (kbd "Y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
-  (kbd "Z") 'dired-do-compress
-  (kbd "+") 'dired-create-directory
-  (kbd "-") 'dired-do-kill-lines
-  (kbd "% l") 'dired-downcase
-  (kbd "% m") 'dired-mark-files-regexp
-  (kbd "% u") 'dired-upcase
-  (kbd "* %") 'dired-mark-files-regexp
-  (kbd "* .") 'dired-mark-extension
-  (kbd "* /") 'dired-mark-directories
-  (kbd "; d") 'epa-dired-do-decrypt
-  (kbd "; e") 'epa-dired-do-encrypt)
-;; Get file icons in dired
-(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-;; With dired-open plugin, you can launch external programs for certain extensions
-;; For example, I set all .png files to open in 'sxiv' and all .mp4 files to open in 'mpv'
-;;(setq dired-open-extensions '(("gif" . "sxiv")
-;;                              ("jpg" . "sxiv")
-;;                              ("png" . "sxiv")
-;;                              ("mkv" . "mpv")
-;;                              ("mp4" . "mpv")))
-(evil-define-key 'normal peep-dired-mode-map
-  (kbd "j") 'peep-dired-next-file
-  (kbd "k") 'peep-dired-prev-file)
-(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
-;;
-(setq dired-dwim-target t) ;;打开两个窗口，在一个窗口复制或移动文件时直接定位到另一个窗口
-
-;;(require 'ivy-rich)
-;;(ivy-rich-mode 1)
-;;(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
-
-;;(require 'find-file-in-project)
-;;(ivy-mode 1)
-;;(setq ffip-project-root "~/Org-Notes")
-
-(setq eros-eval-result-prefix "⟹ ") ; default =>
-
-(after! company
-  (setq company-idle-delay 0.5
-        company-minimum-prefix-length 2)
-  (setq company-show-numbers t)
-  (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
-;;增强history
-(setq-default history-length 1000)
-(setq-default prescient-history-length 1000)
-
-(setq yas-triggers-in-field t)
-
-(sp-local-pair
- '(org-mode)
- "<<" ">>"
- :actions '(insert))
-
-(after! avy
-  ;; home row priorities: 8 6 4 5 - - 1 2 3 7
-  (setq avy-keys '(?n ?e ?i ?s ?t ?r ?i ?a)))
-
-(use-package emojify
-  :hook (after-init . global-emojify-mode))
-
 (after! org-roam (setq org-roam-directory (file-truename "~/Org-Notes/Roam/")))
 ;;
 
@@ -514,76 +429,160 @@
       :localleader
       "l f" #'+org-insert-file-link)
 
-(use-package! pyim
-  :config
-  (require 'pyim-basedict)
-  (require 'pyim-cregexp-utils)
-  (pyim-basedict-enable)
-  ;; (setq default-input-method "pyim")
+;;(defvar xyu/biblio-libraries-list (list (expand-file-name "~/Org-Notes/Library/myReferences.bib")))
+;; bibtex-completion
+(after! bibtex-completion
+  (setq! bibtex-completion-bibliography '("~/Org-Notes/Library/myReferences.bib"))
+  (setq! bibtex-completion-notes-path "~/Org-Notes/Roam/ref")
+  (setq! bibtex-completion-pdf-field "File")
+  (setq! bibtex-completion-additional-search-fields '(keywords journal booktitle))
+  (setq! bibtex-completion-pdf-symbol "P")
+  (setq! bibtex-completion-notes-symbol "N")
+  (setq! bibtex-completion-display-formats '((article . "${=has-pdf=:1} ${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
+                                            (inbook . "${=has-pdf=:1} ${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
+                                            (incollection . "${=has-pdf=:1} ${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+                                            (inproceedings . "${=has-pdf=:1} ${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+                                            (t . "${=has-pdf=:1} ${=has-note=:1} ${year:4} ${author:36} ${title:*}"))))
+;; Citar
+(after! citar
+  ;; (setq citar-bibliography org-cite-global-bibliography)
+  (setq! citar-bibliography
+        '("~/Org-Notes/Library/myReferences.bib"))
+  (setq citar-notes-paths "~/Org-Notes/Roam/ref")
+  (setq citar-library-file-extensions '("pdf" "jpg" "epub"))
+  (setq citar-at-point-function 'embark-act)
+  (setq citar-templates '((main . "${author editor:30} ${date year issued:4} ${title:48}")
+                          (suffix . "${=key= id:15} ${=type=:12} ${tags keywords:*}")
+                          (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
+                          (note . "${title}")))
+  (setq citar-symbol-separator "  ")
+  (setq citar-library-file-extensions (list "pdf" "jpg"))
+  (setq citar-file-additional-files-separator "-")
 
-  ;; 如果使用 popup page tooltip, 就需要加载 popup 包。
-  ;; (require 'popup nil t)
-  ;; (setq pyim-page-tooltip 'popup)
+  ;; https://blog.tecosaur.com/tmio/2021-07-31-citations.html
+  (setq org-cite-global-bibliography citar-bibliography)
+  (setq org-cite-insert-processor 'citar)
+  (setq org-cite-follow-processor 'citar)
+  (setq org-cite-activate-processor 'citar)
 
-  ;; 如果使用 pyim-dregcache dcache 后端，就需要加载 pyim-dregcache 包。
-  ;; (require 'pyim-dregcache)
-  ;; (setq pyim-dcache-backend 'pyim-dregcache)
+  (with-eval-after-load 'all-the-icons
+    (setq citar-symbols
+          `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
+            (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
+            (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " "))))
+
+  (with-eval-after-load 'citar-org
+    (define-key citar-org-citation-map (kbd "<return>") 'org-open-at-point)
+    (define-key org-mode-map (kbd "C-c C-x @") 'citar-insert-citation)))
+
+(after! citar-org-roam
+  (with-eval-after-load 'org-roam
+    ;; citar-org-roam
+    (citar-org-roam-mode)
+    (with-eval-after-load 'citar-org-roam
+      (setq citar-org-roam-subdir "ref")
+      (setq citar-org-roam-note-title-template "${title}"))
+
+    ;; Temporarily work, wait citar-org-roam update to support capture with template.
+    (defun xyu/citar-org-roam--create-capture-note (citekey entry)
+      "Open or create org-roam node for CITEKEY and ENTRY."
+      ;; adapted from https://jethrokuan.github.io/org-roam-guide/#orgc48eb0d
+      (let ((title (citar-format--entry
+                    citar-org-roam-note-title-template entry)))
+        (org-roam-capture-
+         :templates
+         '(("r" "reference" plain (file "~/.doom.d/template/reference") :if-new ;; Change "%?" to a template file.
+            (file+head
+             "%(concat
+                  (when citar-org-roam-subdir (concat citar-org-roam-subdir \"/\")) \"${citekey}.org\")"
+             "#+title: ${title}\n")
+            :immediate-finish t
+            :unnarrowed t))
+         :info (list :citekey citekey)
+         :node (org-roam-node-create :title title)
+         :props '(:finalize find-file))
+        (org-roam-ref-add (concat "@" citekey))))
+    (advice-add 'citar-org-roam--create-capture-note :override #'xyu/citar-org-roam--create-capture-note)
+
+    (after! citar-embark
+      (add-hook 'org-mode-hook 'citar-embark-mode))
+
+    (with-eval-after-load 'org-roam
+      (require-package 'org-roam-bibtex))))
+
+;; Ebib
+;; A replace of zotero, But I think zotero is better to use.
+;; Only use ebib to filter reference in Emacs.
+(after! ebib
+  (setq ebib-index-mode-line nil)
+  (setq ebib-entry-mode-line nil)
+
+  (setq ebib-preload-bib-files bibtex-completion-bibliography)
+
+  (setq ebib-keywords ("~/Org-Notes/Library/keywords.txt"))
+  (setq ebib-notes-directory ("~/Org-Notes/Roam/ref"))
+  (setq ebib-filters-default-file ("~/Org-Notes/Library/ebib-filters"))
+  (setq ebib-reading-list-file ("~/Org-Notes/Library/reading_list.org"))
+
+  (setq ebib-keywords-field-keep-sorted t)
+  (setq ebib-keywords-file-save-on-exit 'always)
+
+  (setq ebib-index-columns
+        '(("Entry Key" 30 t) ("Note" 1 nil) ("Year" 6 t) ("Title" 50 t)))
+  (setq ebib-file-associations '(("ps" . "gv"))))
+
+;;(global-set-key (kbd "<f2>") 'ebib)
+
+;; == Can do, but not useful.
+;; use biblio to search bibtex.
+;; 不怎么使用这个功能，Zotero 在这个方面更好使。
+;;(require-package 'biblio)
+;;(defun my/biblio-lookup-crossref ()
+;;    (interactive)
+;;  (biblio-lookup 'biblio-crossref-backend))
+;;;; 常出错，不如使用网页版进行。
+;;(when (maybe-require-package 'scihub)
+;;  (setq scihub-download-directory "~/Downloads/")
+;;  (setq scihub-open-after-download t))
+;;
+;;;; company-auctex
+(use-package! company-auctex)
+(add-hook 'company-mode-hook 'company-auctex-init)
+
+;; (defun company-bibtex-completion-candidates ()
+;;   (let ((bibtex-completion-bibliography
+;;          (or (bibtex-completion-find-local-bibliography)
+;;              bibtex-completion-bibliography)))
+;;     (mapcar (lambda (x) (propertize (cdr (assoc "=key=" (cdr x)))
+;;                                     'bibtex-completion-annotation
+;;                                     (cdr (assoc "title" (cdr x)))))
+;;             (bibtex-completion-candidates))))
+
+;; (defun company-bibtex-completion (command &optional arg &rest ignored)
+;;   "bibtex-completion backend."
+;;   (interactive (list 'interactive))
+;;   (cl-case command
+;;     (interactive (company-begin-backend 'company-bibtex-completion))
+;;     (prefix (let ((prefixes
+;;                    (cond ((derived-mode-p 'latex-mode)
+;;                           (company-auctex-prefix "\\\\cite[^[{]*\\(?:\\[[^]]*\\]\\)?{\\([^}]*\\)\\="))
+;;                          ((and (derived-mode-p 'org-mode)
+;;                                (not (org-in-src-block-p))
+;;                                (looking-back "cite:\\([^}]*\\)"))
+;;                           (match-string-no-properties 1))
+;;                          (t nil))))
+;;               (if prefixes
+;;                   (last (split-string prefixes "," t))
+;;                 nil)))
+;;     (candidates (all-completions arg (company-bibtex-completion-candidates)))
+;;     (annotation (get-text-property 0 'bibtex-completion-annotation arg))))
+
+;; (add-to-list 'company-backends #'company-bibtex-completion)
 
 
-
-  ;; 显示5个候选词。
-  (setq pyim-page-length 5)
-
-  ;; 金手指设置，可以将光标处的编码，比如：拼音字符串，转换为中文。
-  ;; (global-set-key (kbd "M-j") 'pyim-convert-string-at-point)
-
-  ;; 按 "C-<return>" 将光标前的 regexp 转换为可以搜索中文的 regexp.
-  (define-key minibuffer-local-map (kbd "C-<return>") 'pyim-cregexp-convert-at-point)
-
-  ;; 我使用全拼
-  (pyim-default-scheme 'quanpin)
-  ;; (pyim-default-scheme 'wubi)
-  ;; (pyim-default-scheme 'cangjie)
-
-  ;; 我使用云拼音
-  ;; (setq pyim-cloudim 'baidu)
-
-  ;; pyim 探针设置
-  ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
-  ;; 我自己使用的中英文动态切换规则是：
-  ;; 1. 光标只有在注释里面时，才可以输入中文。
-  ;; 2. 光标前是汉字字符时，才能输入中文。
-  ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
-  ;; (setq-default pyim-english-input-switch-functions
-  ;;               '(pyim-probe-dynamic-english
-  ;;                 pyim-probe-isearch-mode
-  ;;                 pyim-probe-program-mode
-  ;;                 pyim-probe-org-structure-template))
-
-  ;; (setq-default pyim-punctuation-half-width-functions
-  ;;               '(pyim-probe-punctuation-line-beginning
-  ;;                 pyim-probe-punctuation-after-punctuation))
-
-  ;; 开启代码搜索中文功能（比如拼音，五笔码等）
-  (pyim-isearch-mode 1)
-  ;; 让 vertico, selectrum 等补全框架，通过 orderless 支持拼音搜索候选项功能。
-  (defun my-orderless-regexp (orig-func component)
-    (let ((result (funcall orig-func component)))
-      (pyim-cregexp-build result)))
-  ;; 以下解决 在vertico 搜索时按 C-n C-p 卡顿的问题
-  (defun xyu/pyim-advice-add ()
-    (advice-add 'orderless-regexp :around #'my-orderless-regexp))
-
-  (defun xyu/pyim-advice-remove (&optional n)
-    (advice-remove 'orderless-regexp #'my-orderless-regexp))
-
-  (advice-add  #'vertico-next :before #'xyu/pyim-advice-remove)
-  (advice-add  #'vertico-previous :before #'xyu/pyim-advice-remove)
-  (advice-add  'abort-recursive-edit :before #'xyu/pyim-advice-add)
-  (advice-add  'abort-minibuffers :before #'xyu/pyim-advice-add)
-  (advice-add  'exit-minibuffer :before #'xyu/pyim-advice-add)
-  (xyu/pyim-advice-add)   ;; 默认开启
-  )
+;;(provide 'init-bibtex)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; init-bibtex.el ends here
 
 (add-hook 'doc-view-mode-hook 'pdf-tools-install)
 
@@ -661,3 +660,177 @@
 ;;  (setq nov-unzip-program (executable-find "bsdtar")
 ;;        nov-unzip-args '("-xC" directory "-f" filename))
 ;;  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
+
+(map! :leader
+      (:prefix ("d" . "dired")
+       :desc "Open dired" "d" #'dired
+       :desc "Dired jump to current" "j" #'dired-jump) ;;跳转到buffer所在的目录
+      (:after dired
+       (:map dired-mode-map
+        :desc "Peep-dired image previews" "d p" #'peep-dired
+        :desc "Dired view file" "d v" #'dired-view-file))) ;;peep-dired 预览文件内容
+
+(evil-define-key 'normal dired-mode-map
+  (kbd "M-RET") 'dired-display-file
+  (kbd "h") 'dired-up-directory
+  (kbd "l") 'dired-open-file ; use dired-find-file instead of dired-open.
+  (kbd "m") 'dired-mark
+  (kbd "t") 'dired-toggle-marks
+  (kbd "u") 'dired-unmark
+  (kbd "C") 'dired-do-copy
+  (kbd "D") 'dired-do-delete
+  (kbd "J") 'dired-goto-file
+  (kbd "M") 'dired-do-chmod
+  (kbd "O") 'dired-do-chown
+  (kbd "P") 'dired-do-print
+  (kbd "R") 'dired-do-rename
+  (kbd "T") 'dired-do-touch
+  (kbd "Y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
+  (kbd "Z") 'dired-do-compress
+  (kbd "+") 'dired-create-directory
+  (kbd "-") 'dired-do-kill-lines
+  (kbd "% l") 'dired-downcase
+  (kbd "% m") 'dired-mark-files-regexp
+  (kbd "% u") 'dired-upcase
+  (kbd "* %") 'dired-mark-files-regexp
+  (kbd "* .") 'dired-mark-extension
+  (kbd "* /") 'dired-mark-directories
+  (kbd "; d") 'epa-dired-do-decrypt
+  (kbd "; e") 'epa-dired-do-encrypt)
+;; Get file icons in dired
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+;; With dired-open plugin, you can launch external programs for certain extensions
+;; For example, I set all .png files to open in 'sxiv' and all .mp4 files to open in 'mpv'
+;;(setq dired-open-extensions '(("gif" . "sxiv")
+;;                              ("jpg" . "sxiv")
+;;                              ("png" . "sxiv")
+;;                              ("mkv" . "mpv")
+;;                              ("mp4" . "mpv")))
+(evil-define-key 'normal peep-dired-mode-map
+  (kbd "j") 'peep-dired-next-file
+  (kbd "k") 'peep-dired-prev-file)
+(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+;;
+(setq dired-dwim-target t) ;;打开两个窗口，在一个窗口复制或移动文件时直接定位到另一个窗口
+
+;;(require 'ivy-rich)
+;;(ivy-rich-mode 1)
+;;(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+
+;;(require 'find-file-in-project)
+;;(ivy-mode 1)
+;;(setq ffip-project-root "~/Org-Notes")
+
+(setq eros-eval-result-prefix "⟹ ") ; default =>
+
+(after! company
+  (setq company-idle-delay 0.5
+        company-minimum-prefix-length 2)
+  (setq company-show-numbers t)
+  (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
+;;增强history
+(setq-default history-length 1000)
+(setq-default prescient-history-length 1000)
+
+(setq yas-triggers-in-field t)
+
+(sp-local-pair
+ '(org-mode)
+ "<<" ">>"
+ :actions '(insert))
+
+(after! avy
+  ;; home row priorities: 8 6 4 5 - - 1 2 3 7
+  (setq avy-keys '(?n ?e ?i ?s ?t ?r ?i ?a)))
+
+(use-package emojify
+  :hook (after-init . global-emojify-mode))
+
+(use-package! pyim
+  :config
+  (require 'pyim-basedict)
+  (require 'pyim-cregexp-utils)
+  (pyim-basedict-enable)
+  ;; (setq default-input-method "pyim")
+
+  ;; 如果使用 popup page tooltip, 就需要加载 popup 包。
+  ;; (require 'popup nil t)
+  ;; (setq pyim-page-tooltip 'popup)
+
+  ;; 如果使用 pyim-dregcache dcache 后端，就需要加载 pyim-dregcache 包。
+  ;; (require 'pyim-dregcache)
+  ;; (setq pyim-dcache-backend 'pyim-dregcache)
+
+
+
+  ;; 显示5个候选词。
+  (setq pyim-page-length 5)
+
+  ;; 金手指设置，可以将光标处的编码，比如：拼音字符串，转换为中文。
+  ;; (global-set-key (kbd "M-j") 'pyim-convert-string-at-point)
+
+  ;; 按 "C-<return>" 将光标前的 regexp 转换为可以搜索中文的 regexp.
+  (define-key minibuffer-local-map (kbd "C-<return>") 'pyim-cregexp-convert-at-point)
+
+  ;; 我使用全拼
+  (pyim-default-scheme 'quanpin)
+  ;; (pyim-default-scheme 'wubi)
+  ;; (pyim-default-scheme 'cangjie)
+
+  ;; 我使用云拼音
+  ;; (setq pyim-cloudim 'baidu)
+
+  ;; pyim 探针设置
+  ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
+  ;; 我自己使用的中英文动态切换规则是：
+  ;; 1. 光标只有在注释里面时，才可以输入中文。
+  ;; 2. 光标前是汉字字符时，才能输入中文。
+  ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
+  ;; (setq-default pyim-english-input-switch-functions
+  ;;               '(pyim-probe-dynamic-english
+  ;;                 pyim-probe-isearch-mode
+  ;;                 pyim-probe-program-mode
+  ;;                 pyim-probe-org-structure-template))
+
+  ;; (setq-default pyim-punctuation-half-width-functions
+  ;;               '(pyim-probe-punctuation-line-beginning
+  ;;                 pyim-probe-punctuation-after-punctuation))
+
+  ;; 开启代码搜索中文功能（比如拼音，五笔码等）
+  (pyim-isearch-mode 1)
+  ;; 让 vertico, selectrum 等补全框架，通过 orderless 支持拼音搜索候选项功能。
+  (defun my-orderless-regexp (orig-func component)
+    (let ((result (funcall orig-func component)))
+      (pyim-cregexp-build result)))
+  ;; 以下解决 在vertico 搜索时按 C-n C-p 卡顿的问题
+  (defun xyu/pyim-advice-add ()
+    (advice-add 'orderless-regexp :around #'my-orderless-regexp))
+
+  (defun xyu/pyim-advice-remove (&optional n)
+    (advice-remove 'orderless-regexp #'my-orderless-regexp))
+
+  (advice-add  #'vertico-next :before #'xyu/pyim-advice-remove)
+  (advice-add  #'vertico-previous :before #'xyu/pyim-advice-remove)
+  (advice-add  'abort-recursive-edit :before #'xyu/pyim-advice-add)
+  (advice-add  'abort-minibuffers :before #'xyu/pyim-advice-add)
+  (advice-add  'exit-minibuffer :before #'xyu/pyim-advice-add)
+  (xyu/pyim-advice-add)   ;; 默认开启
+  )
+
+;; Enable the www ligature in every possible major mode
+;;(ligature-set-ligatures 't '("www"))
+;;
+;;;; Enable ligatures in programming modes
+;;(ligature-set-ligatures 'prog-mode '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
+;;                                     ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
+;;                                     "-<" "-<<" "-~" "#{" "#[" "##" "###" "####" "#(" "#?" "#_"
+;;                                     "#_(" ".-" ".=" ".." "..<" "..." "?=" "??" ";;" "/*" "/**"
+;;                                     "/=" "/==" "/>" "//" "///" "&&" "||" "||=" "|=" "|>" "^=" "$>"
+;;                                     "++" "+++" "+>" "=:=" "==" "===" "==>" "=>" "=>>" "<="
+;;                                     "=<<" "=/=" ">-" ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*"
+;;                                     "<*>" "<|" "<|>" "<$" "<$>" "<!--" "<-" "<--" "<->" "<+"
+;;                                     "<+>" "<=" "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<"
+;;                                     "<~" "<~~" "</" "</>" "~@" "~-" "~>" "~~" "~~>" "%%"))
+;;
+;;(global-ligature-mode 't)
+;;
