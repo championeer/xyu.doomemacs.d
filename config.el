@@ -432,13 +432,13 @@
 ;;(defvar xyu/biblio-libraries-list (list (expand-file-name "~/Org-Notes/Library/myReferences.bib")))
 ;; bibtex-completion
 (after! bibtex-completion
-  (setq! bibtex-completion-bibliography '("~/Org-Notes/Library/myReferences.bib"))
-  (setq! bibtex-completion-notes-path "~/Org-Notes/Roam/ref")
-  (setq! bibtex-completion-pdf-field "File")
-  (setq! bibtex-completion-additional-search-fields '(keywords journal booktitle))
-  (setq! bibtex-completion-pdf-symbol "P")
-  (setq! bibtex-completion-notes-symbol "N")
-  (setq! bibtex-completion-display-formats '((article . "${=has-pdf=:1} ${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
+  (setq bibtex-completion-bibliography '("~/Org-Notes/Library/myReferences.bib"))
+  (setq bibtex-completion-notes-path "~/Org-Notes/Roam/ref")
+  (setq bibtex-completion-pdf-field "File")
+  (setq bibtex-completion-additional-search-fields '(keywords journal booktitle))
+  (setq bibtex-completion-pdf-symbol "P")
+  (setq bibtex-completion-notes-symbol "N")
+  (setq bibtex-completion-display-formats '((article . "${=has-pdf=:1} ${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
                                             (inbook . "${=has-pdf=:1} ${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
                                             (incollection . "${=has-pdf=:1} ${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
                                             (inproceedings . "${=has-pdf=:1} ${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
@@ -446,7 +446,7 @@
 ;; Citar
 (after! citar
   ;; (setq citar-bibliography org-cite-global-bibliography)
-  (setq! citar-bibliography
+  (setq citar-bibliography
         '("~/Org-Notes/Library/myReferences.bib"))
   (setq citar-notes-paths "~/Org-Notes/Roam/ref")
   (setq citar-library-file-extensions '("pdf" "jpg" "epub"))
