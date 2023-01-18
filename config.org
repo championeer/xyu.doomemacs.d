@@ -134,9 +134,6 @@
 (global-set-key (kbd "<f12>") 'org-roam-capture) ;;打开org-roam捕捉模板
 #+end_src
 
-#+RESULTS:
-: org-roam-capture
-
 ** 默认设置（自动保存等）
 #+begin_src emacs-lisp
 (setq-default
