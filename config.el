@@ -508,7 +508,7 @@
       (add-hook 'org-mode-hook 'citar-embark-mode))
 
     (with-eval-after-load 'org-roam
-      (require-package 'org-roam-bibtex))))
+      (use-package! org-roam-bibtex))))
 
 ;; Ebib
 ;; A replace of zotero, But I think zotero is better to use.
@@ -661,29 +661,29 @@
 ;;        nov-unzip-args '("-xC" directory "-f" filename))
 ;;  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 
-(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
+;;(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
 
-(require 'eaf)
+;;(require 'eaf)
 
 ;; (require 'eaf-markdown-previewer)
 ;; (require 'eaf-rss-reader)
- (require 'eaf-pdf-viewer)
+;; (require 'eaf-pdf-viewer)
 ;; (require 'eaf-image-viewer)
 ;; (require 'eaf-browser)
 ;; (require 'eaf-org-previewer)
 ;; (require 'eaf-mindmap)
 ;; (require 'eaf-org)
- (defun eaf-org-open-file (file &optional link)
-  "An wrapper function on `eaf-open'."
-  (eaf-open file))
+;; (defun eaf-org-open-file (file &optional link)
+;;  "An wrapper function on `eaf-open'."
+;;  (eaf-open file))
 ;;请使用 M-x eaf-org-export-to-pdf-and-open
 ;; use `emacs-application-framework' to open PDF file: link
- (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
+ ;;(add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
 
- (require 'eaf-evil)
+ ;;(require 'eaf-evil)
 ;; eaf会把C-SPC当成evil的leader-key，在你加载'eaf-evil之后使用eaf时就需要在eaf中键入C-SPC使用evil leader下的键。
 ;; 我们只需要将这个键设置为 SPC或你自己的evil-leader-key即可
- (setq eaf-evil-leader-key "SPC")
+ ;;(setq eaf-evil-leader-key "SPC")
 
 ;;使用eaf查看latex输出的pdf文件
 ;; (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex --synctex=1%(mode)%' %t" TeX-run-TeX nil t))
