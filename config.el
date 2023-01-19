@@ -390,7 +390,7 @@
 (use-package! org-transclusion)
 
 ;; https://org-roam.discourse.group/t/opening-url-in-roam-refs-field/2564/4?u=jousimies
-(defun gpc/open-node-roam-ref-url ()
+(defun xyu/open-node-roam-ref-url ()
   "Open the URL in this node's ROAM_REFS property, if one exists."
   (interactive)
   (when-let ((ref-url (org-entry-get-with-inheritance "ROAM_REFS")))
@@ -432,8 +432,9 @@
 ;;(defvar xyu/biblio-libraries-list (list (expand-file-name "~/Org-Notes/Library/myReferences.bib")))
 ;; bibtex-completion
 (after! bibtex-completion
-  (setq bibtex-completion-bibliography '("~/Org-Notes/Library/myReferences.bib"))
+  (setq bibtex-completion-bibliography '("~/Org-Notes/Library/zotero.bib"))
   (setq bibtex-completion-notes-path "~/Org-Notes/Roam/ref")
+  (setq bibtex-completion-library-path "~/Zotero")
   (setq bibtex-completion-pdf-field "File")
   (setq bibtex-completion-additional-search-fields '(keywords journal booktitle))
   (setq bibtex-completion-pdf-symbol "P")
@@ -447,8 +448,9 @@
 (after! citar
   ;; (setq citar-bibliography org-cite-global-bibliography)
   (setq citar-bibliography
-        '("~/Org-Notes/Library/myReferences.bib"))
+        '("~/Org-Notes/Library/zotero.bib"))
   (setq citar-notes-paths "~/Org-Notes/Roam/ref")
+  ;;(setq citar-library-paths "~/Zotero")
   (setq citar-library-file-extensions '("pdf" "jpg" "epub"))
   (setq citar-at-point-function 'embark-act)
   (setq citar-templates '((main . "${author editor:30} ${date year issued:4} ${title:48}")
@@ -508,7 +510,8 @@
       (add-hook 'org-mode-hook 'citar-embark-mode))
 
     (with-eval-after-load 'org-roam
-      (use-package! org-roam-bibtex))))
+      (use-package! org-roam-bibtex)
+      )))
 
 ;; Ebib
 ;; A replace of zotero, But I think zotero is better to use.
@@ -693,6 +696,15 @@
 ;;如果不想用深色背景
 ;;(setq eaf-pdf-dark-mode nil)
 
+(after! company
+  (setq company-idle-delay 0.5
+        company-minimum-prefix-length 2)
+  (setq company-show-numbers t)
+  (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
+;;增强history
+(setq-default history-length 1000)
+(setq-default prescient-history-length 1000)
+
 (map! :leader
       (:prefix ("d" . "dired")
        :desc "Open dired" "d" #'dired
@@ -754,15 +766,6 @@
 ;;(setq ffip-project-root "~/Org-Notes")
 
 (setq eros-eval-result-prefix "⟹ ") ; default =>
-
-(after! company
-  (setq company-idle-delay 0.5
-        company-minimum-prefix-length 2)
-  (setq company-show-numbers t)
-  (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
-;;增强history
-(setq-default history-length 1000)
-(setq-default prescient-history-length 1000)
 
 (setq yas-triggers-in-field t)
 
@@ -898,3 +901,5 @@
   ;; enable the /inline english/ mode for all buffers
   (sis-global-inline-mode t)
   )
+
+(beacon-mode 1)

@@ -22,18 +22,9 @@
 - [[#文献阅读bibtexzotero等配置][文献阅读（bibtex、Zotero等）配置]]
 - [[#pdf等电子文件阅读pdf-toolsnovel等][PDF等电子文件阅读(pdf-tools、nov.el等)]]
 - [[#eaf配置更好的pdf-viewer][EAF配置（更好的pdf viewer）]]
-- [[#dired-配置][DIRED 配置]]
-- [[#ivy-rich显示命令的详细描述][ivy-rich：显示命令的详细描述]]
-- [[#find-file-in-project陈斌的插件用于在项目中快速找到文件][find-file-in-project：陈斌的插件，用于在项目中快速找到文件]]
-- [[#eros][Eros]]
 - [[#补全company配置][补全（Company）配置]]
-- [[#yasnippets][YASnippets]]
-- [[#smart-parentheses][Smart Parentheses]]
-- [[#avy-配置一个强大的方便跳转等操作的包][Avy 配置：一个强大的方便跳转等操作的包]]
-- [[#emojis][Emojis]]
-- [[#拼音搜索配置pyimpyim-basedict][拼音搜索配置（Pyim/Pyim-basedict）]]
-- [[#ligature配置][ligature配置]]
-- [[#中英文混合输入smart-input-source配置][中英文混合输入（smart input source）配置]]
+- [[#dired-配置][DIRED 配置]]
+- [[#其他小功能配置][其他小功能配置]]
 
 * 系统设置
 #+begin_src emacs-lisp
@@ -340,7 +331,7 @@
             )))
 #+end_src
 * Org-roam 配置
-基于 org-mode 的双链笔记
+- 说明：基于 org-mode 的双链笔记
 *** Org-roam
 ***** 设置默认的org-roam目录
 #+begin_src emacs-lisp
@@ -494,7 +485,7 @@
 (use-package! org-transclusion)
 
 ;; https://org-roam.discourse.group/t/opening-url-in-roam-refs-field/2564/4?u=jousimies
-(defun gpc/open-node-roam-ref-url ()
+(defun xyu/open-node-roam-ref-url ()
   "Open the URL in this node's ROAM_REFS property, if one exists."
   (interactive)
   (when-let ((ref-url (org-entry-get-with-inheritance "ROAM_REFS")))
@@ -544,8 +535,9 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 ;;(defvar xyu/biblio-libraries-list (list (expand-file-name "~/Org-Notes/Library/myReferences.bib")))
 ;; bibtex-completion
 (after! bibtex-completion
-  (setq bibtex-completion-bibliography '("~/Org-Notes/Library/myReferences.bib"))
+  (setq bibtex-completion-bibliography '("~/Org-Notes/Library/zotero.bib"))
   (setq bibtex-completion-notes-path "~/Org-Notes/Roam/ref")
+  (setq bibtex-completion-library-path "~/Zotero")
   (setq bibtex-completion-pdf-field "File")
   (setq bibtex-completion-additional-search-fields '(keywords journal booktitle))
   (setq bibtex-completion-pdf-symbol "P")
@@ -559,8 +551,9 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 (after! citar
   ;; (setq citar-bibliography org-cite-global-bibliography)
   (setq citar-bibliography
-        '("~/Org-Notes/Library/myReferences.bib"))
+        '("~/Org-Notes/Library/zotero.bib"))
   (setq citar-notes-paths "~/Org-Notes/Roam/ref")
+  ;;(setq citar-library-paths "~/Zotero")
   (setq citar-library-file-extensions '("pdf" "jpg" "epub"))
   (setq citar-at-point-function 'embark-act)
   (setq citar-templates '((main . "${author editor:30} ${date year issued:4} ${title:48}")
@@ -620,7 +613,8 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
       (add-hook 'org-mode-hook 'citar-embark-mode))
 
     (with-eval-after-load 'org-roam
-      (use-package! org-roam-bibtex))))
+      (use-package! org-roam-bibtex)
+      )))
 
 ;; Ebib
 ;; A replace of zotero, But I think zotero is better to use.
@@ -813,6 +807,18 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 ;;如果不想用深色背景
 ;;(setq eaf-pdf-dark-mode nil)
 #+end_src
+* 补全（Company）配置
+来自:completion company,一套补全框架(vertico,orderless,marginalia,embark,consult)
+#+begin_src emacs-lisp
+(after! company
+  (setq company-idle-delay 0.5
+        company-minimum-prefix-length 2)
+  (setq company-show-numbers t)
+  (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
+;;增强history
+(setq-default history-length 1000)
+(setq-default prescient-history-length 1000)
+#+end_src
 * DIRED 配置
 #+begin_src emacs-lisp
 (map! :leader
@@ -867,44 +873,33 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 ;;
 (setq dired-dwim-target t) ;;打开两个窗口，在一个窗口复制或移动文件时直接定位到另一个窗口
 #+end_src
-* ivy-rich：显示命令的详细描述
+* 其他小功能配置
+*** ivy-rich：显示命令的详细描述
 (换用 vertico 系列包，暂时屏蔽)
 #+begin_src emacs-lisp
 ;;(require 'ivy-rich)
 ;;(ivy-rich-mode 1)
 ;;(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
 #+end_src
-* find-file-in-project：陈斌的插件，用于在项目中快速找到文件
+*** find-file-in-project：陈斌的插件，用于在项目中快速找到文件
 #+begin_src emacs-lisp
 ;;(require 'find-file-in-project)
 ;;(ivy-mode 1)
 ;;(setq ffip-project-root "~/Org-Notes")
 #+end_src
-* Eros
+*** Eros
 #+begin_quote
 来自:tool eval
 #+end_quote
 #+begin_src emacs-lisp
 (setq eros-eval-result-prefix "⟹ ") ; default =>
 #+end_src
-* 补全（Company）配置
-来自:completion company,一套补全框架(vertico,orderless,marginalia,embark,consult)
-#+begin_src emacs-lisp
-(after! company
-  (setq company-idle-delay 0.5
-        company-minimum-prefix-length 2)
-  (setq company-show-numbers t)
-  (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
-;;增强history
-(setq-default history-length 1000)
-(setq-default prescient-history-length 1000)
-#+end_src
-* YASnippets
+*** YASnippets
 来自:editor snippets，开启 snippets 嵌套支持
 #+begin_src emacs-lisp
 (setq yas-triggers-in-field t)
 #+end_src
-* Smart Parentheses
+*** Smart Parentheses
 来自:core packages，增加 org-mode 的配对
 #+begin_src emacs-lisp
 (sp-local-pair
@@ -912,20 +907,20 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
  "<<" ">>"
  :actions '(insert))
 #+end_src
-* Avy 配置：一个强大的方便跳转等操作的包
+*** Avy 配置：一个强大的方便跳转等操作的包
 来自:config default
 #+begin_src emacs-lisp
 (after! avy
   ;; home row priorities: 8 6 4 5 - - 1 2 3 7
   (setq avy-keys '(?n ?e ?i ?s ?t ?r ?i ?a)))
 #+end_src
-* Emojis
+*** Emojis
 来自:ui emoji
 #+begin_src emacs-lisp
 (use-package emojify
   :hook (after-init . global-emojify-mode))
 #+end_src
-* 拼音搜索配置（Pyim/Pyim-basedict）
+*** 拼音搜索配置（Pyim/Pyim-basedict）
 给 vertico 等搜索补全框架提供拼音支持
 #+begin_src emacs-lisp
 (use-package! pyim
@@ -1000,7 +995,7 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
   )
 
 #+end_src
-* ligature配置
+*** ligature配置
 增加样式
 #+begin_src emacs-lisp
 ;; Enable the www ligature in every possible major mode
@@ -1021,7 +1016,7 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 ;;(global-ligature-mode 't)
 ;;
 #+end_src
-* 中英文混合输入（smart input source）配置
+*** 中英文混合输入（smart input source）配置
 配置来自：https://emacs-china.org/t/doomemacs-eaf/23155/10
 #+begin_src emacs-lisp
 (use-package! sis
@@ -1055,4 +1050,10 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
   ;; enable the /inline english/ mode for all buffers
   (sis-global-inline-mode t)
   )
+#+end_src
+*** Beacon
+- 说明：滚动屏幕时，通过闪烁提示鼠标指针所在的位置
+- 安装：(package! beacon)
+#+begin_src emacs-lisp
+(beacon-mode 1)
 #+end_src

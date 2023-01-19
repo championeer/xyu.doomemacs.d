@@ -29,10 +29,17 @@
 ;;(package! citar-org-roam)
 ;;(package! citar-embark)
 (package! ebib)
-(package! org-roam-bibtex)
+;;(package! org-roam-bibtex)
+(package! org-roam-bibtex
+  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
+;; When using org-roam via the `+roam` flag
+(unpin! org-roam)
+;; When using bibtex-completion via the `biblio` module
+(unpin! bibtex-completion helm-bibtex ivy-bibtex)
 ;;
 (package! sis) ;;中英文输入自动切换
-
+;;
+(package! beacon)
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
 ;; https://github.com/radian-software/straight.el#the-recipe-format
