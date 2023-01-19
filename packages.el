@@ -29,6 +29,7 @@
 ;;(package! citar-org-roam)
 ;;(package! citar-embark)
 (package! ebib)
+(package! org-roam-bibtex)
 ;;
 
 ;; To install a package directly from a remote git repo, you must specify a
