@@ -1,4 +1,37 @@
 #+TITLE: XYU的Doom Emacs 配置
+* Table of Content :toc:
+- [[#系统设置][系统设置]]
+- [[#个人信息][个人信息]]
+  - [[#用于加密等][用于加密等]]
+- [[#ui-配置][UI 配置]]
+  - [[#设置-doom-theme行号等][设置 doom theme、行号等]]
+  - [[#dashboard-配置][Dashboard 配置]]
+  - [[#启动窗口大小][启动窗口大小]]
+  - [[#doom-modeline-配置][doom-modeline 配置]]
+- [[#通用配置][通用配置]]
+  - [[#常用的全局键绑定][常用的全局键绑定]]
+  - [[#默认设置自动保存等][默认设置（自动保存等）]]
+  - [[#evil-模式下在窗口间快速移动][Evil 模式下在窗口间快速移动]]
+  - [[#增加几个-bookmark-命令][增加几个 Bookmark 命令]]
+- [[#org-mode-配置][Org-mode 配置]]
+  - [[#org-默认目录][Org 默认目录]]
+  - [[#美化-org][美化 Org]]
+  - [[#设置-todo-的默认配置][设置 TODO 的默认配置]]
+  - [[#设置-org-agenda][设置 Org-agenda]]
+- [[#org-roam-配置][Org-roam 配置]]
+- [[#文献阅读bibtexzotero等配置][文献阅读（bibtex、Zotero等）配置]]
+- [[#pdf等电子文件阅读pdf-toolsnovel等][PDF等电子文件阅读(pdf-tools、nov.el等)]]
+- [[#dired-配置][DIRED 配置]]
+- [[#ivy-rich显示命令的详细描述][ivy-rich：显示命令的详细描述]]
+- [[#find-file-in-project陈斌的插件用于在项目中快速找到文件][find-file-in-project：陈斌的插件，用于在项目中快速找到文件]]
+- [[#eros][Eros]]
+- [[#补全company配置][补全（Company）配置]]
+- [[#yasnippets][YASnippets]]
+- [[#smart-parentheses][Smart Parentheses]]
+- [[#avy-配置一个强大的方便跳转等操作的包][Avy 配置：一个强大的方便跳转等操作的包]]
+- [[#emojis][Emojis]]
+- [[#拼音搜索配置pyimpyim-basedict][拼音搜索配置（Pyim/Pyim-basedict）]]
+- [[#ligature配置][ligature配置]]
 
 * 系统设置
 #+begin_src emacs-lisp
@@ -100,9 +133,6 @@
 (global-set-key (kbd "C-s") 'consult-line) ;;同“SPC s s”，类似于swiper的搜索方式
 (global-set-key (kbd "<f12>") 'org-roam-capture) ;;打开org-roam捕捉模板
 #+end_src
-
-#+RESULTS:
-: org-roam-capture
 
 ** 默认设置（自动保存等）
 #+begin_src emacs-lisp
@@ -665,6 +695,10 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 ;;; init-bibtex.el ends here
 
 #+end_src
+
+#+RESULTS:
+| company-auctex-init | evil-normalize-keymaps | company-mode-set-explicitly |
+
 * PDF等电子文件阅读(pdf-tools、nov.el等)
 
 #+begin_src emacs-lisp
