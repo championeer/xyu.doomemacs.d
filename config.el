@@ -669,7 +669,7 @@
 ;; (require 'eaf-rss-reader)
  (require 'eaf-pdf-viewer)
 ;; (require 'eaf-image-viewer)
- (require 'eaf-browser)
+;; (require 'eaf-browser)
 ;; (require 'eaf-org-previewer)
 ;; (require 'eaf-mindmap)
 ;; (require 'eaf-org)

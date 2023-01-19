@@ -789,7 +789,7 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 ;; (require 'eaf-rss-reader)
  (require 'eaf-pdf-viewer)
 ;; (require 'eaf-image-viewer)
- (require 'eaf-browser)
+;; (require 'eaf-browser)
 ;; (require 'eaf-org-previewer)
 ;; (require 'eaf-mindmap)
 ;; (require 'eaf-org)
