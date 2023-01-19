@@ -21,6 +21,7 @@
 - [[#org-roam-配置][Org-roam 配置]]
 - [[#文献阅读bibtexzotero等配置][文献阅读（bibtex、Zotero等）配置]]
 - [[#pdf等电子文件阅读pdf-toolsnovel等][PDF等电子文件阅读(pdf-tools、nov.el等)]]
+- [[#eaf配置更好的pdf-viewer][EAF配置（更好的pdf viewer）]]
 - [[#dired-配置][DIRED 配置]]
 - [[#ivy-rich显示命令的详细描述][ivy-rich：显示命令的详细描述]]
 - [[#find-file-in-project陈斌的插件用于在项目中快速找到文件][find-file-in-project：陈斌的插件，用于在项目中快速找到文件]]
@@ -32,6 +33,7 @@
 - [[#emojis][Emojis]]
 - [[#拼音搜索配置pyimpyim-basedict][拼音搜索配置（Pyim/Pyim-basedict）]]
 - [[#ligature配置][ligature配置]]
+- [[#中英文混合输入smart-input-source配置][中英文混合输入（smart input source）配置]]
 
 * 系统设置
 #+begin_src emacs-lisp
@@ -696,11 +698,7 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 
 #+end_src
 
-#+RESULTS:
-| company-auctex-init | evil-normalize-keymaps | company-mode-set-explicitly |
-
 * PDF等电子文件阅读(pdf-tools、nov.el等)
-
 #+begin_src emacs-lisp
 (add-hook 'doc-view-mode-hook 'pdf-tools-install)
 
@@ -779,6 +777,41 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 ;;        nov-unzip-args '("-xC" directory "-f" filename))
 ;;  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 
+#+end_src
+
+* EAF配置（更好的pdf viewer）
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
+
+(require 'eaf)
+
+;; (require 'eaf-markdown-previewer)
+;; (require 'eaf-rss-reader)
+ (require 'eaf-pdf-viewer)
+;; (require 'eaf-image-viewer)
+ (require 'eaf-browser)
+;; (require 'eaf-org-previewer)
+;; (require 'eaf-mindmap)
+;; (require 'eaf-org)
+ (defun eaf-org-open-file (file &optional link)
+  "An wrapper function on `eaf-open'."
+  (eaf-open file))
+;;请使用 M-x eaf-org-export-to-pdf-and-open
+;; use `emacs-application-framework' to open PDF file: link
+ (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
+
+ (require 'eaf-evil)
+;; eaf会把C-SPC当成evil的leader-key，在你加载'eaf-evil之后使用eaf时就需要在eaf中键入C-SPC使用evil leader下的键。
+;; 我们只需要将这个键设置为 SPC或你自己的evil-leader-key即可
+ (setq eaf-evil-leader-key "SPC")
+
+;;使用eaf查看latex输出的pdf文件
+;; (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex --synctex=1%(mode)%' %t" TeX-run-TeX nil t))
+;; (add-to-list 'TeX-view-program-list '("eaf" eaf-pdf-synctex-forward-view))
+;; (add-to-list 'TeX-view-program-selection '(output-pdf "eaf"))
+
+;;如果不想用深色背景
+;;(setq eaf-pdf-dark-mode nil)
 #+end_src
 * DIRED 配置
 #+begin_src emacs-lisp
@@ -987,4 +1020,39 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 ;;
 ;;(global-ligature-mode 't)
 ;;
+#+end_src
+* 中英文混合输入（smart input source）配置
+配置来自：https://emacs-china.org/t/doomemacs-eaf/23155/10
+#+begin_src emacs-lisp
+(use-package! sis
+  ;; :hook
+  ;; enable the /context/ and /inline region/ mode for specific buffers
+  ;; (((text-mode prog-mode) . sis-context-mode)
+  ;;  ((text-mode prog-mode) . sis-inline-mode))
+
+  :config
+  ;; For MacOS
+  ;; (sis-ism-lazyman-config
+
+  ;;  ;; English input source may be: "ABC", "US" or another one.
+  ;;  ;; "com.apple.keylayout.ABC"
+  ;;  "com.apple.keylayout.US"
+
+  ;;  ;; Other language input source: "rime", "sogou" or another one.
+  ;;  ;; "im.rime.inputmethod.Squirrel.Rime"
+  ;;  "com.sogou.inputmethod.sogou.pinyin")
+ ;; (sis-ism-lazyman-config "1" "2" 'fcitx5)
+ (sis-ism-lazyman-config
+ "com.apple.keylayout.ABC"
+ "com.sogou.inputmethod.sogou.pinyin")
+
+  ;; enable the /cursor color/ mode
+  (sis-global-cursor-color-mode t)
+  ;; enable the /respect/ mode
+  (sis-global-respect-mode t)
+  ;; enable the /context/ mode for all buffers
+  (sis-global-context-mode t)
+  ;; enable the /inline english/ mode for all buffers
+  (sis-global-inline-mode t)
+  )
 #+end_src

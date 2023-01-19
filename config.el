@@ -661,6 +661,38 @@
 ;;        nov-unzip-args '("-xC" directory "-f" filename))
 ;;  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 
+(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
+
+(require 'eaf)
+
+;; (require 'eaf-markdown-previewer)
+;; (require 'eaf-rss-reader)
+ (require 'eaf-pdf-viewer)
+;; (require 'eaf-image-viewer)
+ (require 'eaf-browser)
+;; (require 'eaf-org-previewer)
+;; (require 'eaf-mindmap)
+;; (require 'eaf-org)
+ (defun eaf-org-open-file (file &optional link)
+  "An wrapper function on `eaf-open'."
+  (eaf-open file))
+;;请使用 M-x eaf-org-export-to-pdf-and-open
+;; use `emacs-application-framework' to open PDF file: link
+ (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
+
+ (require 'eaf-evil)
+;; eaf会把C-SPC当成evil的leader-key，在你加载'eaf-evil之后使用eaf时就需要在eaf中键入C-SPC使用evil leader下的键。
+;; 我们只需要将这个键设置为 SPC或你自己的evil-leader-key即可
+ (setq eaf-evil-leader-key "SPC")
+
+;;使用eaf查看latex输出的pdf文件
+;; (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex --synctex=1%(mode)%' %t" TeX-run-TeX nil t))
+;; (add-to-list 'TeX-view-program-list '("eaf" eaf-pdf-synctex-forward-view))
+;; (add-to-list 'TeX-view-program-selection '(output-pdf "eaf"))
+
+;;如果不想用深色背景
+;;(setq eaf-pdf-dark-mode nil)
+
 (map! :leader
       (:prefix ("d" . "dired")
        :desc "Open dired" "d" #'dired
@@ -834,3 +866,35 @@
 ;;
 ;;(global-ligature-mode 't)
 ;;
+
+(use-package! sis
+  ;; :hook
+  ;; enable the /context/ and /inline region/ mode for specific buffers
+  ;; (((text-mode prog-mode) . sis-context-mode)
+  ;;  ((text-mode prog-mode) . sis-inline-mode))
+
+  :config
+  ;; For MacOS
+  ;; (sis-ism-lazyman-config
+
+  ;;  ;; English input source may be: "ABC", "US" or another one.
+  ;;  ;; "com.apple.keylayout.ABC"
+  ;;  "com.apple.keylayout.US"
+
+  ;;  ;; Other language input source: "rime", "sogou" or another one.
+  ;;  ;; "im.rime.inputmethod.Squirrel.Rime"
+  ;;  "com.sogou.inputmethod.sogou.pinyin")
+ ;; (sis-ism-lazyman-config "1" "2" 'fcitx5)
+ (sis-ism-lazyman-config
+ "com.apple.keylayout.ABC"
+ "com.sogou.inputmethod.sogou.pinyin")
+
+  ;; enable the /cursor color/ mode
+  (sis-global-cursor-color-mode t)
+  ;; enable the /respect/ mode
+  (sis-global-respect-mode t)
+  ;; enable the /context/ mode for all buffers
+  (sis-global-context-mode t)
+  ;; enable the /inline english/ mode for all buffers
+  (sis-global-inline-mode t)
+  )
