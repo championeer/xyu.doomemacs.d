@@ -531,6 +531,15 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
       "l f" #'+org-insert-file-link)
 #+end_src
 * 文献阅读（bibtex、Zotero等）配置
+- 说明：用Emacs实现文献（电子书等）阅读、笔记流程
+- 安装：
+  + 主要参考了Jousimies的bibtex配置
+- 配置:主要使用了citar这个包
+- 使用：
+  + 直接搜索citekey并打开pdf文件：M-x citar-open-files
+  + 创建文献笔记：M-x citar-create-note
+  + 打开文献笔记：M-x citar-open-note
+  + 检索文献笔记：M-x org-roam-rf-find
 #+begin_src emacs-lisp
 ;;(defvar xyu/biblio-libraries-list (list (expand-file-name "~/Org-Notes/Library/myReferences.bib")))
 ;; bibtex-completion
@@ -1017,7 +1026,9 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 ;;
 #+end_src
 *** 中英文混合输入（smart input source）配置
-配置来自：https://emacs-china.org/t/doomemacs-eaf/23155/10
+- 说明：在不同模式下切换到对应的输入法，但似乎没感受到效果
+- 安装：
+  +  配置来自：https://emacs-china.org/t/doomemacs-eaf/23155/10
 #+begin_src emacs-lisp
 (use-package! sis
   ;; :hook
