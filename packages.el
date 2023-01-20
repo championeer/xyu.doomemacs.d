@@ -20,6 +20,7 @@
 (package! consult-org-roam)
 (package! consult-notes)
 (package! org-transclusion)
+(package! org-appear)
 ;;pyim
 (package! pyim)
 (package! pyim-basedict)

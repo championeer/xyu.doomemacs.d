@@ -18,6 +18,9 @@
   - [[#美化-org][美化 Org]]
   - [[#设置-todo-的默认配置][设置 TODO 的默认配置]]
   - [[#设置-org-agenda][设置 Org-agenda]]
+  - [[#org-download][org-download]]
+  - [[#org-appear][org-appear]]
+  - [[#org-to-docx][org to docx]]
 - [[#org-roam-配置][Org-roam 配置]]
 - [[#文献阅读bibtexzotero等配置][文献阅读（bibtex、Zotero等）配置]]
 - [[#pdf等电子文件阅读pdf-toolsnovel等][PDF等电子文件阅读(pdf-tools、nov.el等)]]
@@ -329,6 +332,59 @@
             "*** 今天有什么惊喜？ \n"
             "*** 今天有什么需要改进的地方？ \n"
             )))
+#+end_src
+** org-download
+- 说明：使用拖拽方式在org文件中添加图片
+- 安装：doom emacs org-mode 内置模块
+#+begin_src emacs-lisp
+(after! org-download
+  (add-hook 'org-mode-hook 'org-download-enable)
+  (setq org-download-image-dir ("~/Org-Notes/images"))
+  (setq org-download-screenshot-method 'screencapture)
+  (setq org-download-abbreviate-filename-function 'expand-file-name)
+  (setq org-download-timestamp "%Y%m%d%H%M%S")
+  (setq org-download-display-inline-images nil)
+  (setq org-download-heading-lvl nil)
+  (setq org-download-annotate-function (lambda (_link) ""))
+  (setq org-download-image-attr-list '("#+NAME: fig: "
+                                       "#+CAPTION: "
+                                       "#+ATTR_ORG: :width 500px"
+                                       "#+ATTR_LATEX: :width 10cm :placement [!htpb]"
+                                       "#+ATTR_HTML: :width 600px"))
+  ;; (setq org-download-screenshot-basename ".png")
+  )
+#+end_src
+** org-appear
+- 说明：自动切换被隐藏的一些org元素，比如link等
+#+begin_src emacs-lisp
+(use-package! org-appear
+  :after org
+  :config
+  (setq org-appear-autolinks t)
+  (setq org-appear-trigger 'manual)
+  (add-hook 'org-mode-hook (lambda ()
+                           (add-hook 'evil-insert-state-entry-hook
+                                     #'org-appear-manual-start
+                                     nil
+                                     t)
+                           (add-hook 'evil-insert-state-exit-hook
+                                     #'org-appear-manual-stop
+                                     nil
+                                     t)))
+  ;; (setq org-link-descriptive nil)
+
+  (add-hook 'org-mode-hook 'org-appear-mode))
+#+end_src
+** org to docx
+- 说明：使用pandoc将org文件转换为docx
+#+begin_src emacs-lisp
+(defun org-export-docx ()
+    "Convert org to docx."
+    (interactive)
+    (let ((docx-file (concat (file-name-sans-extension (buffer-file-name)) ".docx"))
+          (template-file ("~/.doom.d/template/template.docx")))
+      (shell-command (format "pandoc %s -o %s --reference-doc=%s" (buffer-file-name) docx-file template-file))
+      (message "Convert finish: %s" docx-file)))
 #+end_src
 * Org-roam 配置
 - 说明：基于 org-mode 的双链笔记
@@ -784,29 +840,29 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 
 * EAF配置（更好的pdf viewer）
 #+begin_src emacs-lisp
-;;(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
+(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
 
-;;(require 'eaf)
+(require 'eaf)
 
-;; (require 'eaf-markdown-previewer)
+ (require 'eaf-markdown-previewer)
 ;; (require 'eaf-rss-reader)
-;; (require 'eaf-pdf-viewer)
+ (require 'eaf-pdf-viewer)
 ;; (require 'eaf-image-viewer)
-;; (require 'eaf-browser)
-;; (require 'eaf-org-previewer)
+ (require 'eaf-browser)
+ (require 'eaf-org-previewer)
 ;; (require 'eaf-mindmap)
 ;; (require 'eaf-org)
-;; (defun eaf-org-open-file (file &optional link)
-;;  "An wrapper function on `eaf-open'."
-;;  (eaf-open file))
+ (defun eaf-org-open-file (file &optional link)
+  "An wrapper function on `eaf-open'."
+  (eaf-open file))
 ;;请使用 M-x eaf-org-export-to-pdf-and-open
 ;; use `emacs-application-framework' to open PDF file: link
- ;;(add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
+ (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
 
- ;;(require 'eaf-evil)
+ (require 'eaf-evil)
 ;; eaf会把C-SPC当成evil的leader-key，在你加载'eaf-evil之后使用eaf时就需要在eaf中键入C-SPC使用evil leader下的键。
 ;; 我们只需要将这个键设置为 SPC或你自己的evil-leader-key即可
- ;;(setq eaf-evil-leader-key "SPC")
+ (setq eaf-evil-leader-key "SPC")
 
 ;;使用eaf查看latex输出的pdf文件
 ;; (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex --synctex=1%(mode)%' %t" TeX-run-TeX nil t))

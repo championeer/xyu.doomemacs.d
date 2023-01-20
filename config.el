@@ -254,6 +254,49 @@
             "*** 今天有什么需要改进的地方？ \n"
             )))
 
+(after! org-download
+  (add-hook 'org-mode-hook 'org-download-enable)
+  (setq org-download-image-dir ("~/Org-Notes/images"))
+  (setq org-download-screenshot-method 'screencapture)
+  (setq org-download-abbreviate-filename-function 'expand-file-name)
+  (setq org-download-timestamp "%Y%m%d%H%M%S")
+  (setq org-download-display-inline-images nil)
+  (setq org-download-heading-lvl nil)
+  (setq org-download-annotate-function (lambda (_link) ""))
+  (setq org-download-image-attr-list '("#+NAME: fig: "
+                                       "#+CAPTION: "
+                                       "#+ATTR_ORG: :width 500px"
+                                       "#+ATTR_LATEX: :width 10cm :placement [!htpb]"
+                                       "#+ATTR_HTML: :width 600px"))
+  ;; (setq org-download-screenshot-basename ".png")
+  )
+
+(use-package! org-appear
+  :after org
+  :config
+  (setq org-appear-autolinks t)
+  (setq org-appear-trigger 'manual)
+  (add-hook 'org-mode-hook (lambda ()
+                           (add-hook 'evil-insert-state-entry-hook
+                                     #'org-appear-manual-start
+                                     nil
+                                     t)
+                           (add-hook 'evil-insert-state-exit-hook
+                                     #'org-appear-manual-stop
+                                     nil
+                                     t)))
+  ;; (setq org-link-descriptive nil)
+
+  (add-hook 'org-mode-hook 'org-appear-mode))
+
+(defun org-export-docx ()
+    "Convert org to docx."
+    (interactive)
+    (let ((docx-file (concat (file-name-sans-extension (buffer-file-name)) ".docx"))
+          (template-file ("~/.doom.d/template/template.docx")))
+      (shell-command (format "pandoc %s -o %s --reference-doc=%s" (buffer-file-name) docx-file template-file))
+      (message "Convert finish: %s" docx-file)))
+
 (after! org-roam (setq org-roam-directory (file-truename "~/Org-Notes/Roam/")))
 ;;
 
@@ -664,29 +707,29 @@
 ;;        nov-unzip-args '("-xC" directory "-f" filename))
 ;;  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 
-;;(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
+(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
 
-;;(require 'eaf)
+(require 'eaf)
 
-;; (require 'eaf-markdown-previewer)
+ (require 'eaf-markdown-previewer)
 ;; (require 'eaf-rss-reader)
-;; (require 'eaf-pdf-viewer)
+ (require 'eaf-pdf-viewer)
 ;; (require 'eaf-image-viewer)
-;; (require 'eaf-browser)
-;; (require 'eaf-org-previewer)
+ (require 'eaf-browser)
+ (require 'eaf-org-previewer)
 ;; (require 'eaf-mindmap)
 ;; (require 'eaf-org)
-;; (defun eaf-org-open-file (file &optional link)
-;;  "An wrapper function on `eaf-open'."
-;;  (eaf-open file))
+ (defun eaf-org-open-file (file &optional link)
+  "An wrapper function on `eaf-open'."
+  (eaf-open file))
 ;;请使用 M-x eaf-org-export-to-pdf-and-open
 ;; use `emacs-application-framework' to open PDF file: link
- ;;(add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
+ (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
 
- ;;(require 'eaf-evil)
+ (require 'eaf-evil)
 ;; eaf会把C-SPC当成evil的leader-key，在你加载'eaf-evil之后使用eaf时就需要在eaf中键入C-SPC使用evil leader下的键。
 ;; 我们只需要将这个键设置为 SPC或你自己的evil-leader-key即可
- ;;(setq eaf-evil-leader-key "SPC")
+ (setq eaf-evil-leader-key "SPC")
 
 ;;使用eaf查看latex输出的pdf文件
 ;; (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex --synctex=1%(mode)%' %t" TeX-run-TeX nil t))
