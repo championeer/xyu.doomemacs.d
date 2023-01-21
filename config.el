@@ -476,7 +476,7 @@
 ;; bibtex-completion
 (after! bibtex-completion
   (setq bibtex-completion-bibliography '("~/Org-Notes/Library/zotero.bib"))
-  (setq bibtex-completion-notes-path "~/Org-Notes/Roam/ref")
+  (setq bibtex-completion-notes-path "~/Org-Notes/Roam/reading")
   (setq bibtex-completion-library-path "~/Zotero")
   (setq bibtex-completion-pdf-field "File")
   (setq bibtex-completion-additional-search-fields '(keywords journal booktitle))
@@ -566,7 +566,7 @@
   (setq ebib-preload-bib-files bibtex-completion-bibliography)
 
   (setq ebib-keywords ("~/Org-Notes/Library/keywords.txt"))
-  (setq ebib-notes-directory ("~/Org-Notes/Roam/ref"))
+  (setq ebib-notes-directory ("~/Org-Notes/Roam/reading"))
   (setq ebib-filters-default-file ("~/Org-Notes/Library/ebib-filters"))
   (setq ebib-reading-list-file ("~/Org-Notes/Library/reading_list.org"))
 
