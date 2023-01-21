@@ -545,6 +545,7 @@
         "M-T" #'calibredb-set-metadata--title
         "M-c" #'calibredb-set-metadata--comments))
 
+;;参考：https://github.com/nowislewis/nowisemacs/blob/master/useful-tools/old-elisps/org-roam-config.org
 ;;(defvar xyu/biblio-libraries-list (list (expand-file-name "~/Org-Notes/Library/myReferences.bib")))
 ;; bibtex-completion
 (after! bibtex-completion
