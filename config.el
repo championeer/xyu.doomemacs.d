@@ -548,6 +548,8 @@
 ;;(defvar xyu/biblio-libraries-list (list (expand-file-name "~/Org-Notes/Library/myReferences.bib")))
 ;; bibtex-completion
 (after! bibtex-completion
+  ;;(setq bibtex-completion-bibliography '(("~/Org-Notes/Library/zotero.bib")
+  ;;                                       ("~/Sync/Library/calibre/catalog.bib")))
   (setq bibtex-completion-bibliography '("~/Org-Notes/Library/zotero.bib"))
   (setq bibtex-completion-notes-path "~/Org-Notes/Roam/reading")
   (setq bibtex-completion-library-path "~/Zotero")
@@ -563,8 +565,7 @@
 ;; Citar
 (after! citar
   ;; (setq citar-bibliography org-cite-global-bibliography)
-  (setq citar-bibliography
-        '("~/Org-Notes/Library/zotero.bib"))
+  (setq citar-bibliography '("~/Org-Notes/Library/zotero.bib"))
   (setq citar-notes-paths "~/Org-Notes/Roam/reading")
   ;;(setq citar-library-paths "~/Zotero")
   ;;(setq citar-library-file-extensions '("pdf" "jpg" "epub"))

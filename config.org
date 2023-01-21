@@ -681,6 +681,8 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 ;;(defvar xyu/biblio-libraries-list (list (expand-file-name "~/Org-Notes/Library/myReferences.bib")))
 ;; bibtex-completion
 (after! bibtex-completion
+  ;;(setq bibtex-completion-bibliography '(("~/Org-Notes/Library/zotero.bib")
+  ;;                                       ("~/Sync/Library/calibre/catalog.bib")))
   (setq bibtex-completion-bibliography '("~/Org-Notes/Library/zotero.bib"))
   (setq bibtex-completion-notes-path "~/Org-Notes/Roam/reading")
   (setq bibtex-completion-library-path "~/Zotero")
@@ -696,8 +698,7 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 ;; Citar
 (after! citar
   ;; (setq citar-bibliography org-cite-global-bibliography)
-  (setq citar-bibliography
-        '("~/Org-Notes/Library/zotero.bib"))
+  (setq citar-bibliography '("~/Org-Notes/Library/zotero.bib"))
   (setq citar-notes-paths "~/Org-Notes/Roam/reading")
   ;;(setq citar-library-paths "~/Zotero")
   ;;(setq citar-library-file-extensions '("pdf" "jpg" "epub"))
@@ -837,6 +838,7 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 ;;; init-bibtex.el ends here
 
 #+end_src
+
 * PDF等电子文件阅读(pdf-tools、nov.el等)
 #+begin_src emacs-lisp
 (add-hook 'doc-view-mode-hook 'pdf-tools-install)
