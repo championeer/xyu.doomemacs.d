@@ -472,6 +472,79 @@
       :localleader
       "l f" #'+org-insert-file-link)
 
+(use-package! calibredb
+  :defer t
+  :init
+  (setq! calibredb-root-dir "~/Sync/Library/calibre"
+         calibredb-db-dir '((expand-file-name "metadata.db" calibredb-root-dir))
+         calibredb-library-alist '(("~/Sync/Library/calibre")
+                                   ("~/library/papers"))
+         calibredb-format-all-the-icons t)
+  :config
+  (map! :map calibredb-show-mode-map
+        "?" #'calibredb-entry-dispatch
+        "o" #'calibredb-find-file
+        "O" #'calibredb-find-file-other-frame
+        "V" #'calibredb-open-file-with-default-tool
+        "s" #'calibredb-set-metadata-dispatch
+        "e" #'calibredb-export-dispatch
+        "q" #'calibredb-entry-quit
+        "y" #'calibredb-yank-dispatch
+        "." #'calibredb-open-dired
+        [tab] #'calibredb-toggle-view-at-point
+        "M-t" #'calibredb-set-metadata--tags
+        "M-a" #'calibredb-set-metadata--author_sort
+        "M-A" #'calibredb-set-metadata--authors
+        "M-T" #'calibredb-set-metadata--title
+        "M-c" #'calibredb-set-metadata--comments)
+  (map! :map calibredb-search-mode-map
+        [mouse-3] #'calibredb-search-mouse
+        "RET" #'calibredb-find-file
+        "?" #'calibredb-dispatch
+        "a" #'calibredb-add
+        "A" #'calibredb-add-dir
+        "c" #'calibredb-clone
+        "d" #'calibredb-remove
+        "D" #'calibredb-remove-marked-items
+        "j" #'calibredb-next-entry
+        "k" #'calibredb-previous-entry
+        "l" #'calibredb-virtual-library-list
+        "L" #'calibredb-library-list
+        "n" #'calibredb-virtual-library-next
+        "N" #'calibredb-library-next
+        "p" #'calibredb-virtual-library-previous
+        "P" #'calibredb-library-previous
+        "s" #'calibredb-set-metadata-dispatch
+        "S" #'calibredb-switch-library
+        "o" #'calibredb-find-file
+        "O" #'calibredb-find-file-other-frame
+        "v" #'calibredb-view
+        "V" #'calibredb-open-file-with-default-tool
+        "." #'calibredb-open-dired
+        "y" #'calibredb-yank-dispatch
+        "b" #'calibredb-catalog-bib-dispatch
+        "e" #'calibredb-export-dispatch
+        "r" #'calibredb-search-refresh-and-clear-filter
+        "R" #'calibredb-search-clear-filter
+        "q" #'calibredb-search-quit
+        "m" #'calibredb-mark-and-forward
+        "f" #'calibredb-toggle-favorite-at-point
+        "x" #'calibredb-toggle-archive-at-point
+        "h" #'calibredb-toggle-highlight-at-point
+        "u" #'calibredb-unmark-and-forward
+        "i" #'calibredb-edit-annotation
+        "DEL" #'calibredb-unmark-and-backward
+        [backtab] #'calibredb-toggle-view
+        [tab] #'calibredb-toggle-view-at-point
+        "M-n" #'calibredb-show-next-entry
+        "M-p" #'calibredb-show-previous-entry
+        "/" #'calibredb-search-live-filter
+        "M-t" #'calibredb-set-metadata--tags
+        "M-a" #'calibredb-set-metadata--author_sort
+        "M-A" #'calibredb-set-metadata--authors
+        "M-T" #'calibredb-set-metadata--title
+        "M-c" #'calibredb-set-metadata--comments))
+
 ;;(defvar xyu/biblio-libraries-list (list (expand-file-name "~/Org-Notes/Library/myReferences.bib")))
 ;; bibtex-completion
 (after! bibtex-completion
