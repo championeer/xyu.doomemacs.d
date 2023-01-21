@@ -618,9 +618,9 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
   ;; (setq citar-bibliography org-cite-global-bibliography)
   (setq citar-bibliography
         '("~/Org-Notes/Library/zotero.bib"))
-  (setq citar-notes-paths "~/Org-Notes/Roam/ref")
+  (setq citar-notes-paths "~/Org-Notes/Roam/reading")
   ;;(setq citar-library-paths "~/Zotero")
-  (setq citar-library-file-extensions '("pdf" "jpg" "epub"))
+  ;;(setq citar-library-file-extensions '("pdf" "jpg" "epub"))
   (setq citar-at-point-function 'embark-act)
   (setq citar-templates '((main . "${author editor:30} ${date year issued:4} ${title:48}")
                           (suffix . "${=key= id:15} ${=type=:12} ${tags keywords:*}")
@@ -651,7 +651,7 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
     ;; citar-org-roam
     (citar-org-roam-mode)
     (with-eval-after-load 'citar-org-roam
-      (setq citar-org-roam-subdir "ref")
+      (setq citar-org-roam-subdir "reading")
       (setq citar-org-roam-note-title-template "${title}"))
 
     ;; Temporarily work, wait citar-org-roam update to support capture with template.
@@ -662,7 +662,7 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
                     citar-org-roam-note-title-template entry)))
         (org-roam-capture-
          :templates
-         '(("r" "reference" plain (file "~/.doom.d/template/reference") :if-new ;; Change "%?" to a template file.
+         '(("r" "reading" plain (file "~/.doom.d/template/readinglog") :if-new ;; Change "%?" to a template file.
             (file+head
              "%(concat
                   (when citar-org-roam-subdir (concat citar-org-roam-subdir \"/\")) \"${citekey}.org\")"
