@@ -603,25 +603,39 @@
       (setq citar-org-roam-note-title-template "${title}"))
 
     ;; Temporarily work, wait citar-org-roam update to support capture with template.
-    (defun xyu/citar-org-roam--create-capture-note (citekey entry)
+ ;;   (defun xyu/citar-org-roam--create-capture-note (citekey entry)
+ ;;     "Open or create org-roam node for CITEKEY and ENTRY."
+ ;;     ;; adapted from https://jethrokuan.github.io/org-roam-guide/#orgc48eb0d
+ ;;     (let ((title (citar-format--entry
+ ;;                   citar-org-roam-note-title-template entry)))
+ ;;       (org-roam-capture-
+ ;;        :templates
+ ;;        '(("r" "reading" plain (file "~/.doom.d/template/readinglog") :if-new ;; Change "%?" to a template file.
+ ;;           (file+head
+ ;;            "%(concat
+ ;;                 (when citar-org-roam-subdir (concat citar-org-roam-subdir \"/\")) \"${title}-note.org\")"
+ ;;            "#+title: ${title}\n")
+ ;;           :immediate-finish t
+ ;;           :unnarrowed t))
+ ;;        :info (list :citekey citekey)
+ ;;        :node (org-roam-node-create :title title)
+ ;;        :props '(:finalize find-file))
+ ;;       (org-roam-ref-add (concat "@" citekey))))
+ ;;   (advice-add 'citar-org-roam--create-capture-note :override #'xyu/citar-org-roam--create-capture-note)
+(defun citar-org-roam--create-capture-note (citekey entry)
       "Open or create org-roam node for CITEKEY and ENTRY."
       ;; adapted from https://jethrokuan.github.io/org-roam-guide/#orgc48eb0d
       (let ((title (citar-format--entry
                     citar-org-roam-note-title-template entry)))
         (org-roam-capture-
          :templates
-         '(("r" "reading" plain (file "~/.doom.d/template/readinglog") :if-new ;; Change "%?" to a template file.
-            (file+head
-             "%(concat
-                  (when citar-org-roam-subdir (concat citar-org-roam-subdir \"/\")) \"${citekey}.org\")"
-             "#+title: ${title}\n")
-            :immediate-finish t
+         '(("r" "reference" plain (file "~/.doom.d/template/readinglog") :if-new
+            (file+head "reading/${title}.org"
+                       ":PROPERTIES:\n:ROAM_REFS: [cite:@${citekey}]\n:END:\n#+title: ${title}\n")
             :unnarrowed t))
-         :info (list :citekey citekey)
-         :node (org-roam-node-create :title title)
-         :props '(:finalize find-file))
-        (org-roam-ref-add (concat "@" citekey))))
-    (advice-add 'citar-org-roam--create-capture-note :override #'xyu/citar-org-roam--create-capture-note)
+      :info (list :citekey citekey)
+      :node (org-roam-node-create :title title)
+      :props '(:finalize find-file))))
 
     (after! citar-embark
       (add-hook 'org-mode-hook 'citar-embark-mode))
