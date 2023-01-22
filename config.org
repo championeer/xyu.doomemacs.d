@@ -18,8 +18,9 @@
   - [[#美化-org][美化 Org]]
   - [[#设置-todo-的默认配置][设置 TODO 的默认配置]]
   - [[#设置-org-agenda][设置 Org-agenda]]
-  - [[#org-download][org-download]]
+  - [[#org-modern][org-modern]]
   - [[#org-appear][org-appear]]
+  - [[#org-download][org-download]]
   - [[#org-to-docx][org to docx]]
 - [[#org-roam-配置][Org-roam 配置]]
 - [[#文献阅读bibtexzotero等配置][文献阅读（bibtex、Zotero等）配置]]
@@ -336,26 +337,21 @@
             "*** 今天有什么需要改进的地方？ \n"
             )))
 #+end_src
-** org-download
-- 说明：使用拖拽方式在org文件中添加图片
-- 安装：doom emacs org-mode 内置模块
+** org-modern
+- 说明：一个美化效果包
+- 安装：package.el中增加org-modern
 #+begin_src emacs-lisp
-(after! org-download
-  (add-hook 'org-mode-hook 'org-download-enable)
-  (setq org-download-image-dir ("~/Org-Notes/images"))
-  (setq org-download-screenshot-method 'screencapture)
-  (setq org-download-abbreviate-filename-function 'expand-file-name)
-  (setq org-download-timestamp "%Y%m%d%H%M%S")
-  (setq org-download-display-inline-images nil)
-  (setq org-download-heading-lvl nil)
-  (setq org-download-annotate-function (lambda (_link) ""))
-  (setq org-download-image-attr-list '("#+NAME: fig: "
-                                       "#+CAPTION: "
-                                       "#+ATTR_ORG: :width 500px"
-                                       "#+ATTR_LATEX: :width 10cm :placement [!htpb]"
-                                       "#+ATTR_HTML: :width 600px"))
-  ;; (setq org-download-screenshot-basename ".png")
-  )
+(use-package! org-modern
+  :hook (org-mode . org-modern-mode)
+  :config
+    (setq org-modern-list '((?+ . "➤")
+                               (?- . "–")
+                               (?* . "•"))
+             org-modern-star '("Ⓐ" "Ⓑ" "Ⓒ" "Ⓓ" "Ⓔ" "Ⓕ" "Ⓖ" "Ⓗ" "Ⓘ" "Ⓙ" "Ⓚ" "Ⓛ" "Ⓜ")
+             org-modern-table nil)
+    ;;(:hook-into org-mode)
+    ;; (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+    )
 #+end_src
 ** org-appear
 - 说明：自动切换被隐藏的一些org元素，比如link等
@@ -377,6 +373,27 @@
   ;; (setq org-link-descriptive nil)
 
   (add-hook 'org-mode-hook 'org-appear-mode))
+#+end_src
+** org-download
+- 说明：使用拖拽方式在org文件中添加图片
+- 安装：doom emacs org-mode 内置模块
+#+begin_src emacs-lisp
+(after! org-download
+  (add-hook 'org-mode-hook 'org-download-enable)
+  (setq org-download-image-dir ("~/Org-Notes/images"))
+  (setq org-download-screenshot-method 'screencapture)
+  (setq org-download-abbreviate-filename-function 'expand-file-name)
+  (setq org-download-timestamp "%Y%m%d%H%M%S")
+  (setq org-download-display-inline-images nil)
+  (setq org-download-heading-lvl nil)
+  (setq org-download-annotate-function (lambda (_link) ""))
+  (setq org-download-image-attr-list '("#+NAME: fig: "
+                                       "#+CAPTION: "
+                                       "#+ATTR_ORG: :width 500px"
+                                       "#+ATTR_LATEX: :width 10cm :placement [!htpb]"
+                                       "#+ATTR_HTML: :width 600px"))
+  ;; (setq org-download-screenshot-basename ".png")
+  )
 #+end_src
 ** org to docx
 - 说明：使用pandoc将org文件转换为docx

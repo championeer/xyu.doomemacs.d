@@ -254,22 +254,17 @@
             "*** 今天有什么需要改进的地方？ \n"
             )))
 
-(after! org-download
-  (add-hook 'org-mode-hook 'org-download-enable)
-  (setq org-download-image-dir ("~/Org-Notes/images"))
-  (setq org-download-screenshot-method 'screencapture)
-  (setq org-download-abbreviate-filename-function 'expand-file-name)
-  (setq org-download-timestamp "%Y%m%d%H%M%S")
-  (setq org-download-display-inline-images nil)
-  (setq org-download-heading-lvl nil)
-  (setq org-download-annotate-function (lambda (_link) ""))
-  (setq org-download-image-attr-list '("#+NAME: fig: "
-                                       "#+CAPTION: "
-                                       "#+ATTR_ORG: :width 500px"
-                                       "#+ATTR_LATEX: :width 10cm :placement [!htpb]"
-                                       "#+ATTR_HTML: :width 600px"))
-  ;; (setq org-download-screenshot-basename ".png")
-  )
+(use-package! org-modern
+  :hook (org-mode . org-modern-mode)
+  :config
+    (setq org-modern-list '((?+ . "➤")
+                               (?- . "–")
+                               (?* . "•"))
+             org-modern-star '("Ⓐ" "Ⓑ" "Ⓒ" "Ⓓ" "Ⓔ" "Ⓕ" "Ⓖ" "Ⓗ" "Ⓘ" "Ⓙ" "Ⓚ" "Ⓛ" "Ⓜ")
+             org-modern-table nil)
+    ;;(:hook-into org-mode)
+    ;; (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+    )
 
 (use-package! org-appear
   :after org
@@ -288,6 +283,23 @@
   ;; (setq org-link-descriptive nil)
 
   (add-hook 'org-mode-hook 'org-appear-mode))
+
+(after! org-download
+  (add-hook 'org-mode-hook 'org-download-enable)
+  (setq org-download-image-dir ("~/Org-Notes/images"))
+  (setq org-download-screenshot-method 'screencapture)
+  (setq org-download-abbreviate-filename-function 'expand-file-name)
+  (setq org-download-timestamp "%Y%m%d%H%M%S")
+  (setq org-download-display-inline-images nil)
+  (setq org-download-heading-lvl nil)
+  (setq org-download-annotate-function (lambda (_link) ""))
+  (setq org-download-image-attr-list '("#+NAME: fig: "
+                                       "#+CAPTION: "
+                                       "#+ATTR_ORG: :width 500px"
+                                       "#+ATTR_LATEX: :width 10cm :placement [!htpb]"
+                                       "#+ATTR_HTML: :width 600px"))
+  ;; (setq org-download-screenshot-basename ".png")
+  )
 
 (defun org-export-docx ()
     "Convert org to docx."
