@@ -1208,3 +1208,8 @@
   (map! :map beancount-mode-map
         :n "TAB" #'beancount-align-to-previous-number
         :i "RET" (cmd! (newline-and-indent) (beancount-align-to-previous-number))))
+
+(use-package! keyfreq
+  :config
+   (keyfreq-mode 1)
+   (keyfreq-autosave-mode 1))

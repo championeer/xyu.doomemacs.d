@@ -1408,3 +1408,12 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
         :n "TAB" #'beancount-align-to-previous-number
         :i "RET" (cmd! (newline-and-indent) (beancount-align-to-previous-number))))
 #+end_src
+*** keyfreq
+- 说明：一个记录按键频次的小包
+- 安装：package.el中增加
+#+begin_src elisp
+  (use-package! keyfreq
+    :config
+     (keyfreq-mode 1)
+     (keyfreq-autosave-mode 1))
+#+end_src
