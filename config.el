@@ -644,11 +644,12 @@
          :templates
          '(("r" "reference" plain (file "~/.doom.d/template/readinglog") :if-new
             (file+head "reading/${title}.org"
-                       ":PROPERTIES:\n:ROAM_REFS: [cite:@${citekey}]\n:END:\n#+title: ${title}\n")
+                       "#+title: ${title}\n")
             :unnarrowed t))
       :info (list :citekey citekey)
       :node (org-roam-node-create :title title)
-      :props '(:finalize find-file))))
+      :props '(:finalize find-file))
+        (org-roam-ref-add (concat "[cite:@" citekey "]"))))
 
     (after! citar-embark
       (add-hook 'org-mode-hook 'citar-embark-mode))
