@@ -5,6 +5,7 @@
 
 ;;(setq doom-theme 'doom-vibrant)
 (setq doom-theme 'doom-zenburn)
+;;(setq doom-theme 'doom-one-light)
 (setq display-line-numbers-type t) ;;行号
 (global-visual-line-mode 1) ;;换行
 ;;美化buffer name
@@ -642,8 +643,8 @@
                     citar-org-roam-note-title-template entry)))
         (org-roam-capture-
          :templates
-         '(("r" "reference" plain (file "~/.doom.d/template/readinglog") :if-new
-            (file+head "reading/${title}.org"
+         '(("r" "Reading" plain (file "~/.doom.d/template/readinglog") :if-new
+            (file+head "reading/${title}_note.org"
                        "#+title: ${title}\n")
             :unnarrowed t))
       :info (list :citekey citekey)
