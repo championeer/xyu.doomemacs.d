@@ -143,7 +143,7 @@
       '((sequence "TODO(t)" "IN-PROGRESS(i)" "WAITING(w)" "DELEGATED(e!)" "|" "DONE(d@/!)" "CANCELED(c@/!)"))))
 
 (after! org (setq org-agenda-files
-      (quote ("~/Org-Notes/" "~/Org-Notes/GTD/"))))
+      (quote ("~/Org-Notes/" "~/Org-Notes/GTD/" "~/Org-Notes/Roam/projects/"))))
 ;;设置默认的视图模式，doom默认为week视图，此配置暂时屏蔽
 ;;(setq org-agenda-span 'week)
 ;;(setq org-agenda-span 'day)
@@ -220,8 +220,8 @@
 (after! org (setq org-capture-templates
       '(("t" "TASK" entry (file+headline "GTD/task.org" "Tasks")
          "* TODO %i%? [/] :@work: \n %U\n")
-        ("p" "PROJECT" entry (file "GTD/project.org")
-         "* STARTUP %i%? [%] :PROJECT:@work: \n created on %U\n")
+        ;;("p" "PROJECT" entry (file "GTD/project.org")
+        ;; "* STARTUP %i%? [%] :PROJECT:@work: \n created on %U\n")
         ("c" "CAPTURE" entry (file "capture.org")
          "* %i%? :IDEA: \n created on %T\n From: %a\n")
         ("m" "MEETING" entry (file+headline "GTD/meeting.org" "Meetings")
@@ -359,8 +359,8 @@
            :target (file+head "newsletter/${slug}.org"
                               "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
            :unnarrowed t)
-          ("b" "Books" plain (file "~/.doom.d/template/readinglog")
-           :target (file+head "books/${slug}.org"
+          ("r" "Reading" plain (file "~/.doom.d/template/readinglog")
+           :target (file+head "reading/${slug}_note.org"
                               "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
            :unnarrowed t)
           ("d" "Diary" plain "%?"
@@ -373,12 +373,16 @@
            :target (file+head "work/${slug}.org"
                          "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
            :unnarrowed t)
-          ("p" "people" plain (file "~/.doom.d/template/crm")
+          ("c" "CRM" plain (file "~/.doom.d/template/crm")
            :target (file+head "crm/${slug}.org"
                               "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
            :unnarrowed t)
-          ("r" "reference" plain (file "~/.doom.d/template/reference")
-           :target (file+head "ref/${citekey}.org"
+          ;;("r" "reference" plain (file "~/.doom.d/template/reference")
+          ;; :target (file+head "ref/${citekey}.org"
+          ;;                    "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+          ;; :unnarrowed t)
+          ("p" "Project" plain (file "~/.doom.d/template/project")
+           :target (file+head "projects/${slug}.org"
                               "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
            :unnarrowed t)
           ("k" "PKM" plain "%?"
