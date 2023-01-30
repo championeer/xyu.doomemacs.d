@@ -262,7 +262,8 @@
                                (?- . "–")
                                (?* . "•"))
              org-modern-star '("Ⓐ" "Ⓑ" "Ⓒ" "Ⓓ" "Ⓔ" "Ⓕ" "Ⓖ" "Ⓗ" "Ⓘ" "Ⓙ" "Ⓚ" "Ⓛ" "Ⓜ")
-             org-modern-table nil)
+             org-modern-table nil
+             org-modern-tag nil)
     ;;(:hook-into org-mode)
     ;; (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
     )
