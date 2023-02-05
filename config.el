@@ -4,8 +4,8 @@
       user-mail-address "jason@chao.com")
 
 ;;(setq doom-theme 'doom-vibrant)
-(setq doom-theme 'doom-zenburn)
-;;(setq doom-theme 'doom-one-light)
+;;(setq doom-theme 'doom-zenburn)
+(setq doom-theme 'doom-one-light)
 (setq display-line-numbers-type t) ;;行号
 (global-visual-line-mode 1) ;;换行
 ;;美化buffer name
