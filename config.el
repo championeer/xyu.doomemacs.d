@@ -5,7 +5,7 @@
 
 ;;(setq doom-theme 'doom-vibrant)
 ;;(setq doom-theme 'doom-zenburn)
-(setq doom-theme 'modus-operandi)
+(setq doom-theme 'modus-operandi-tinted)
 ;;(setq doom-theme 'doom-one-light)
 (setq display-line-numbers-type t) ;;行号
 (global-visual-line-mode 1) ;;换行
