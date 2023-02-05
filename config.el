@@ -383,7 +383,11 @@
           ;;                    "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
           ;; :unnarrowed t)
           ("p" "Project" plain (file "~/.doom.d/template/project")
-           :target (file+head "projects/${slug}.org"
+           :target (file+head "projects/${slug}_proj.org"
+                              "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+           :unnarrowed t)
+          ("o" "OKR" plain (file "~/.doom.d/template/okr")
+           :target (file+head "projects/${slug}_okr.org"
                               "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
            :unnarrowed t)
           ("k" "PKM" plain "%?"
