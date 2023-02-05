@@ -468,7 +468,7 @@
     (setq org-roam-capture-templates
           '(("e" "Newsletter" plain "%?"
              :target (file+head "newsletter/${slug}.org"
-                                "#+TITLE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
+                                "#+TITILE: ${title}\n#+CREATED: %U\n#+MODIFIED: \n")
              :unnarrowed t)
             ("r" "Reading" plain (file "~/.doom.d/template/readinglog")
              :target (file+head "reading/${slug}_note.org"
