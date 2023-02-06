@@ -1063,7 +1063,7 @@
 
 (setq eros-eval-result-prefix "⟹ ") ; default =>
 
-(setq yas-triggers-in-field t)
+;;(setq yas-triggers-in-field t)
 
 (sp-local-pair
  '(org-mode)
@@ -1225,3 +1225,33 @@
   :config
    (keyfreq-mode 1)
    (keyfreq-autosave-mode 1))
+
+(setq org-use-fast-tag-selection t)
+(defun eh-org-fast-tag-selection (&rest args)
+  (let* ((current-tags (cl-copy-list (car args)))
+         (n (length current-tags))
+         (max 5)
+         (prompt (if (> n 0)
+                     (format "Tag (%s%s): "
+                             (mapconcat #'identity
+                                        (cl-subseq current-tags 0 (min n max))
+                                        ", ")
+                             (if (> n max)
+                                 " ..."
+                               ""))
+                   "Tag: "))
+         (crm-separator"[ 	]*[:,][ 	]*")
+         (tgs (completing-read-multiple
+               prompt (mapcar
+                       (lambda (x)
+                         (if (member (car x) current-tags)
+                             (cons (propertize (car x) 'face '(:box t)) (cdr x))
+                           x))
+                       (org-get-buffer-tags)))))
+    (dolist (tg (delete-dups (remove "" tgs)))
+      (when (string-match "\\S-" tg)
+        (if (member tg current-tags)
+	    (setq current-tags (delete tg current-tags))
+	  (push tg current-tags))))
+    (org-make-tag-string current-tags)))
+(advice-add 'org-fast-tag-selection :override #'eh-org-fast-tag-selection)
