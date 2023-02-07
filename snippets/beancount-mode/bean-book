@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: beancount book
+# key: bean_book
+# condition: t
+# --
+option "title" "%?"
+option "operating_currency" "CNY"
