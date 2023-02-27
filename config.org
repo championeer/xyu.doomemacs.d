@@ -93,8 +93,8 @@
 ** Dashboard 配置
 ** 启动窗口大小
 #+begin_src emacs-lisp
-;;(pushnew! initial-frame-alist '(width . 220) '(height . 80))
-(add-hook! 'window-setup-hook #'toggle-frame-fullscreen)
+(pushnew! initial-frame-alist '(width . 140) '(height . 220))
+;;(add-hook! 'window-setup-hook #'toggle-frame-fullscreen)
 #+end_src
 ** doom-modeline 配置
 #+begin_src emacs-lisp

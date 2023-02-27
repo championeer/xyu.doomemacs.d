@@ -5,7 +5,7 @@
 # --
 * Name:
 ** Prompt
-
+(8k, RAW photo, best quality, masterpiece:1.2),
 ** Negative Prompt
 lowres,bad anatomy,bad hands,text,error,missing fingers,
 extra digit,fewer digits,cropped,worst quality,

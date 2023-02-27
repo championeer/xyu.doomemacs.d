@@ -47,8 +47,8 @@
 ;;      )))
 ;;(add-hook! 'doom-init-ui-hook #'xyu/doom-init-ui-misc)
 
-;;(pushnew! initial-frame-alist '(width . 220) '(height . 80))
-(add-hook! 'window-setup-hook #'toggle-frame-fullscreen)
+(pushnew! initial-frame-alist '(width . 140) '(height . 220))
+;;(add-hook! 'window-setup-hook #'toggle-frame-fullscreen)
 
 ;;默认修改中的文件名颜色是红色，这里改为orange
 (custom-set-faces!
