@@ -84,6 +84,7 @@
 ;;调用常用的命令或函数
 (global-set-key (kbd "C-s") 'consult-line) ;;同“SPC s s”，类似于swiper的搜索方式
 (global-set-key (kbd "<f12>") 'org-roam-capture) ;;打开org-roam捕捉模板
+(global-set-key (kbd "<f7>") 'org-tags-view) ;;按tag筛选内容
 
 (setq-default
  delete-by-moving-to-trash t        ; 将文件删除到回收站
@@ -202,6 +203,22 @@
 (after! org (add-to-list 'org-modules 'org-habit t))
 (after! org (setq org-habit-graph-column t))
 
+(defun newday ()
+  (interactive)
+  (progn
+    (find-file "~/Org-Notes/everyday.org")
+    (goto-char (point-max))
+    (insert "*" ?\s (format-time-string "%Y-%m-%d %A") ?\n
+            "** PLAN\n"
+            "** WORKLOG\n"
+            "** LIFELOG\n"
+            "** EVENTS\n"
+            "** REVIEW\n"
+            "*** 今天最大的成果什么？ \n"
+            "*** 今天有什么惊喜？ \n"
+            "*** 今天有什么需要改进的地方？ \n"
+            )))
+
 ;;自定义函数，用于定位everyday.org中的几个关键heading的位置
 (defun my-org-goto-last-worklog-headline ()
   "Move point to the last headline in file matching \"* WORKLOG\"."
@@ -225,37 +242,21 @@
         ;;("p" "PROJECT" entry (file "GTD/project.org")
         ;; "* STARTUP %i%? [%] :PROJECT:@work: \n created on %U\n")
         ("c" "CAPTURE" entry (file "capture.org")
-         "* %i%? :IDEA: \n created on %T\n From: %a\n")
+         "* %^{Title} :IDEA:%^{Tags}: \n created on %T\n From: %a\n")
         ("m" "MEETING" entry (file+headline "GTD/meeting.org" "Meetings")
          "* TODO %i%? :MEETING:@work: \n created on %U\n")
         ("w" "WORKLOG" entry
          (file+function "everyday.org"
                         my-org-goto-last-worklog-headline)
-         "* %i%? :@work: \n%T")
+         "* %^{Title} :@work:%^{Tags}: \n%T")
         ("l" "LIFELOG" entry
          (file+function "everyday.org"
                         my-org-goto-last-lifelog-headline)
-         "* %i%? :@life: \n%T")
+         "* %^{Title} :@life:%^{Tags}: \n%T")
         ("e" "EVENT" entry
          (file+function "everyday.org"
                         my-org-goto-last-event-headline)
-         "* %i%? \n%T"))))
-
-(defun newday ()
-  (interactive)
-  (progn
-    (find-file "~/Org-Notes/everyday.org")
-    (goto-char (point-max))
-    (insert "*" ?\s (format-time-string "%Y-%m-%d %A") ?\n
-            "** PLAN\n"
-            "** WORKLOG\n"
-            "** LIFELOG\n"
-            "** EVENTS\n"
-            "** REVIEW\n"
-            "*** 今天最大的成果什么？ \n"
-            "*** 今天有什么惊喜？ \n"
-            "*** 今天有什么需要改进的地方？ \n"
-            )))
+         "* %^{Title} \n%T"))))
 
 (use-package! org-modern
   :hook (org-mode . org-modern-mode)
