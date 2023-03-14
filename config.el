@@ -1257,3 +1257,6 @@
 	  (push tg current-tags))))
     (org-make-tag-string current-tags)))
 (advice-add 'org-fast-tag-selection :override #'eh-org-fast-tag-selection)
+
+(add-to-list 'load-path "/Users/qianli/AI/mind-wave")
+(require 'mind-wave)

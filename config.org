@@ -32,7 +32,7 @@
 - [[#eaf配置更好的pdf-viewer][EAF配置（更好的pdf viewer）]]
 - [[#补全company配置][补全（Company）配置]]
 - [[#dired-配置][DIRED 配置]]
-- [[#其他小功能配置][其他小功能配置]]
+- [[#其他功能配置][其他功能配置]]
 
 * 系统设置
 #+begin_src emacs-lisp
@@ -1212,7 +1212,7 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 ;;
 (setq dired-dwim-target t) ;;打开两个窗口，在一个窗口复制或移动文件时直接定位到另一个窗口
 #+end_src
-* 其他小功能配置
+* 其他功能配置
 *** ivy-rich：显示命令的详细描述
 (换用 vertico 系列包，暂时屏蔽)
 #+begin_src emacs-lisp
@@ -1464,4 +1464,10 @@ org-roam 的图形展示前端，类似于 roam research 中的图谱
 	  (push tg current-tags))))
     (org-make-tag-string current-tags)))
 (advice-add 'org-fast-tag-selection :override #'eh-org-fast-tag-selection)
+#+end_src
+*** ChatGPT（mind-wave)配置
+说明：来自https://github.com/manateelazycat/mind-wave/blob/master/README.zh-CN.md
+#+begin_src emacs-lisp
+(add-to-list 'load-path "/Users/qianli/AI/mind-wave")
+(require 'mind-wave)
 #+end_src
