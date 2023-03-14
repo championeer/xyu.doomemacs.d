@@ -1260,3 +1260,4 @@
 
 (add-to-list 'load-path "/Users/qianli/AI/mind-wave")
 (require 'mind-wave)
+(setq mind-wave-auto-change-title nil)
