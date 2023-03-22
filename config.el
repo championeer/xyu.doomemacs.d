@@ -126,7 +126,7 @@
        :desc "List bookmarks" "L" #'list-bookmarks
        :desc "Save current bookmarks to bookmark file" "w" #'bookmark-save))
 
-(after! org (setq org-directory "~/Org-Notes/"))
+(after! org (setq org-directory "~/Dropbox/Org-Notes/"))
 
 (after! org (add-hook 'org-mode-hook
           (lambda ()
@@ -146,7 +146,7 @@
       '((sequence "TODO(t)" "IN-PROGRESS(i)" "WAITING(w)" "DELEGATED(e!)" "|" "DONE(d@/!)" "CANCELED(c@/!)"))))
 
 (after! org (setq org-agenda-files
-      (quote ("~/Org-Notes/" "~/Org-Notes/GTD/" "~/Org-Notes/Roam/projects/"))))
+      (quote ("~/Dropbox/Org-Notes/" "~/Dropbox/Org-Notes/GTD/" "~/Dropbox/Org-Notes/Roam/projects/"))))
 ;;设置默认的视图模式，doom默认为week视图，此配置暂时屏蔽
 ;;(setq org-agenda-span 'week)
 ;;(setq org-agenda-span 'day)
@@ -197,8 +197,8 @@
       (buffer-substring start end))))
 ;;diary文件位置
 (after! org (setq org-agenda-include-diary t))
-(after! org (setq org-agenda-diary-file "~/Org-Notes/personal/mydiary"))
-(after! org (setq diary-file "~/Org-Notes/personal/mydiary"))
+(after! org (setq org-agenda-diary-file "~/Dropbox/Org-Notes/personal/mydiary"))
+(after! org (setq diary-file "~/Dropbox/Org-Notes/personal/mydiary"))
 
 (after! org (add-to-list 'org-modules 'org-habit t))
 (after! org (setq org-habit-graph-column t))
@@ -206,7 +206,7 @@
 (defun newday ()
   (interactive)
   (progn
-    (find-file "~/Org-Notes/everyday.org")
+    (find-file "~/Dropbox/Org-Notes/everyday.org")
     (goto-char (point-max))
     (insert "*" ?\s (format-time-string "%Y-%m-%d %A") ?\n
             "** PLAN\n"
@@ -291,7 +291,7 @@
 
 (after! org-download
   (add-hook 'org-mode-hook 'org-download-enable)
-  (setq org-download-image-dir ("~/Org-Notes/images"))
+  (setq org-download-image-dir ("~/Dropbox/Org-Notes/images"))
   (setq org-download-screenshot-method 'screencapture)
   (setq org-download-abbreviate-filename-function 'expand-file-name)
   (setq org-download-timestamp "%Y%m%d%H%M%S")
@@ -314,7 +314,7 @@
       (shell-command (format "pandoc %s -o %s --reference-doc=%s" (buffer-file-name) docx-file template-file))
       (message "Convert finish: %s" docx-file)))
 
-(after! org-roam (setq org-roam-directory (file-truename "~/Org-Notes/Roam/")))
+(after! org-roam (setq org-roam-directory (file-truename "~/Dropbox/Org-Notes/Roam/")))
 ;;
 
 ;;设置timestamp
@@ -470,7 +470,7 @@
   "Get reading list."
   (let (reading-list)
     (append reading-list
-            (file-expand-wildcards (expand-file-name "~/Org-Notes/Roam/books/*.org")))))
+            (file-expand-wildcards (expand-file-name "~/Dropbox/Org-Notes/Roam/books/*.org")))))
 
 (use-package! websocket
     :after org-roam)
@@ -576,8 +576,8 @@
 (after! bibtex-completion
   ;;(setq bibtex-completion-bibliography '(("~/Org-Notes/Library/zotero.bib")
   ;;                                       ("~/Sync/Library/calibre/catalog.bib")))
-  (setq bibtex-completion-bibliography '("~/Org-Notes/Library/zotero.bib"))
-  (setq bibtex-completion-notes-path "~/Org-Notes/Roam/reading")
+  (setq bibtex-completion-bibliography '("~/Dropbox/Org-Notes/Library/zotero.bib"))
+  (setq bibtex-completion-notes-path "~/Dropbox/Org-Notes/Roam/reading")
   (setq bibtex-completion-library-path "~/Zotero")
   (setq bibtex-completion-pdf-field "File")
   (setq bibtex-completion-additional-search-fields '(keywords journal booktitle))
@@ -591,8 +591,8 @@
 ;; Citar
 (after! citar
   ;; (setq citar-bibliography org-cite-global-bibliography)
-  (setq citar-bibliography '("~/Org-Notes/Library/zotero.bib"))
-  (setq citar-notes-paths "~/Org-Notes/Roam/reading")
+  (setq citar-bibliography '("~/Dropbox/Org-Notes/Library/zotero.bib"))
+  (setq citar-notes-paths "~/Dropbox/Org-Notes/Roam/reading")
   ;;(setq citar-library-paths "~/Zotero")
   ;;(setq citar-library-file-extensions '("pdf" "jpg" "epub"))
   (setq citar-at-point-function 'embark-act)
@@ -680,10 +680,10 @@
 
   (setq ebib-preload-bib-files bibtex-completion-bibliography)
 
-  (setq ebib-keywords ("~/Org-Notes/Library/keywords.txt"))
-  (setq ebib-notes-directory ("~/Org-Notes/Roam/reading"))
-  (setq ebib-filters-default-file ("~/Org-Notes/Library/ebib-filters"))
-  (setq ebib-reading-list-file ("~/Org-Notes/Library/reading_list.org"))
+  (setq ebib-keywords ("~/Dropbox/Org-Notes/Library/keywords.txt"))
+  (setq ebib-notes-directory ("~/Dropbox/Org-Notes/Roam/reading"))
+  (setq ebib-filters-default-file ("~/Dropbox/Org-Notes/Library/ebib-filters"))
+  (setq ebib-reading-list-file ("~/Dropbox/Org-Notes/Library/reading_list.org"))
 
   (setq ebib-keywords-field-keep-sorted t)
   (setq ebib-keywords-file-save-on-exit 'always)
