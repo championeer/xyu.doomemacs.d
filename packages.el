@@ -9,16 +9,16 @@
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 ;;(package! org-download)
-(package! keycast)
-(package! ivy-rich)
+;;(package! keycast)
+;;(package! ivy-rich)
 (package! find-file-in-project)
 (package! org-modern)
 (package! nyan-mode) ;;彩虹猫
 ;;org-roam-ui
-(unpin! org-roam)
-(package! org-roam-ui)
-(package! consult-org-roam)
-(package! consult-notes)
+;;(unpin! org-roam)
+;;(package! org-roam-ui)
+;;(package! consult-org-roam)
+;;(package! consult-notes)
 (package! org-transclusion)
 (package! org-appear)
 ;;pyim
@@ -29,20 +29,20 @@
 ;;(package! citar)
 ;;(package! citar-org-roam)
 ;;(package! citar-embark)
-(package! ebib)
+;;(package! ebib)
 ;;(package! org-roam-bibtex)
-(package! org-roam-bibtex
-  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
+;;(package! org-roam-bibtex
+;;  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
 ;; When using org-roam via the `+roam` flag
-(unpin! org-roam)
+;;(unpin! org-roam)
 ;; When using bibtex-completion via the `biblio` module
-(unpin! bibtex-completion helm-bibtex ivy-bibtex)
+;;(unpin! bibtex-completion helm-bibtex ivy-bibtex)
 ;;
 (package! sis) ;;中英文输入自动切换
 ;;
 (package! beacon)
 ;;
-(package! calibredb)
+;;(package! calibredb)
 ;;
 (package! keyfreq)
 ;;
